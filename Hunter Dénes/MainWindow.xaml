@@ -7,10 +7,21 @@
         xmlns:local="clr-namespace:Hunter_Dénes"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <h:HelixViewport3D x:Name="ter" Grid.Column="1" ZoomExtentsWhenLoaded="True">
-        <h:HelixViewport3D.Camera>
-            <PerspectiveCamera x:Name="kamera" Position="20 20 20" LookDirection="-0.9 -0.9 -0.8" UpDirection="1, 1, 1"/>
-        </h:HelixViewport3D.Camera>
-        <h:SunLight/>
-    </h:HelixViewport3D>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel>
+            <ListBox x:Name="lbGyongyok"/>
+        </StackPanel>
+        
+        <h:HelixViewport3D x:Name="ter" Grid.Column="1" ZoomExtentsWhenLoaded="True">
+            <h:HelixViewport3D.Camera>
+                <PerspectiveCamera x:Name="kamera" Position="20 20 20" LookDirection="-0.9 -0.9 -0.8" UpDirection="1, 1, 1"/>
+            </h:HelixViewport3D.Camera>
+            <h:SunLight/>
+        </h:HelixViewport3D>
+    </Grid>
 </Window>
