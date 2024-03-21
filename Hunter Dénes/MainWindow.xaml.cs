@@ -31,12 +31,11 @@ public partial class MainWindow : Window
         DataContext = this;
 
         BetoltGyongyok();
-        lbGyongyok.ItemsSource = new Robot().AI(gyongyok[0], []);
+        lbGyongyok.ItemsSource = new Robot().AI(gyongyok[0]);
 
 
         foreach(Gyongy gyongy in lbGyongyok.Items)
             (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
-        //File.ReadAllBytes("a");
     }
 
     private void BetoltGyongyok()
@@ -46,10 +45,10 @@ public partial class MainWindow : Window
         gyongyok.ForEach(gyongy => {
             EllipsoidVisual3D gyongy3d = new()
             {
-                RadiusX = .1 * (gyongy.Ertek+1) + 1,
-                RadiusY = .1 * (gyongy.Ertek+1) + 1,
-                RadiusZ = .1 * (gyongy.Ertek+1) + 1,
-                Center = new Point3D(gyongy.X, gyongy.Y, gyongy.Z),
+                RadiusX = .05 * (gyongy.Ertek+1) + 1,
+                RadiusY = .05 * (gyongy.Ertek+1) + 1,
+                RadiusZ = .05 * (gyongy.Ertek+1) + 1,
+                Center = new Point3D(-gyongy.X, gyongy.Y, -gyongy.Z),
                 Fill = new SolidColorBrush(Color.FromArgb(255, (byte)(255 - gyongy.Ertek * 20), 80, (byte)(gyongy.Ertek * 20)))
             };
 

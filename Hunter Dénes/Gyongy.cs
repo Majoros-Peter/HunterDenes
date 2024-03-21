@@ -4,16 +4,15 @@ namespace Hunter_Dénes;
 public class Gyongy
 {
     public static readonly List<Gyongy> gyongyok = [];
-    //public static Dictionary<(Gyongy, Gyongy), double> szomszedok = [];
     public Dictionary<int, double> szomszedok = [];
 
-    public int Id { get; init; }
+    public int Id { get; init; } = 0;
     public int X { get; init; } = 0;
     public int Y { get; init; } = 0;
     public int Z { get; init; } = 0;
     public int Ertek { get; init; } = 0;
 
-    private Gyongy() { Id = 0; }
+    private Gyongy() { }
     public Gyongy(int[] adatok, int id)
     {
         Id = id;
@@ -37,7 +36,6 @@ public class Gyongy
             {
                 Gyongy gyongy = new(Array.ConvertAll(sr.ReadLine().TrimEnd(';').Split(';'), Convert.ToInt32), id++);
 
-                //gyongyok.ForEach(G => szomszedok.Add(DictKey(G, gyongy), Távolság(G, gyongy)));
                 gyongyok.ForEach(G => {
                     double tavolsag = Távolság(G, gyongy);
                     G.szomszedok.Add(gyongy.Id, tavolsag);
@@ -58,7 +56,6 @@ public class Gyongy
 
         return Math.Sqrt(x + y + z);
     }
-    public static (Gyongy, Gyongy) DictKey(Gyongy a, Gyongy b) => a.Id<b.Id ? (a, b) : (b, a);
 
     public override string ToString() => $"({X};{Y};{Z}) {Ertek} Mihazánk fitying";
 }
