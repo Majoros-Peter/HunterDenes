@@ -1,7 +1,8 @@
 ﻿namespace Hunter_Dénes;
 
     using HelixToolkit.Wpf;
-    using System.IO;
+using System.Diagnostics;
+using System.IO;
     using System.Runtime.ConstrainedExecution;
     using System.Text;
     using System.Windows;
@@ -31,11 +32,6 @@ public partial class MainWindow : Window
         DataContext = this;
 
         BetoltGyongyok();
-        lbGyongyok.ItemsSource = new Robot().AI(gyongyok[0]);
-
-
-        foreach(Gyongy gyongy in lbGyongyok.Items)
-            (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
     }
 
     private void BetoltGyongyok()
@@ -76,5 +72,25 @@ public partial class MainWindow : Window
             Z -= sebesség;
 
         kamera.Position = new(X, Y, Z);
+    }
+
+    private void Inditas_Click(object sender, RoutedEventArgs e)
+    {
+        if(stopper.IsChecked is true)
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+
+            lbGyongyok.ItemsSource = new Robot(Convert.ToDouble(txtUthossz.Text)).AI(gyongyok[0]);
+
+            sw.Stop();
+            MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
+        }
+        else
+        {
+            lbGyongyok.ItemsSource = new Robot(Convert.ToDouble(txtUthossz.Text)).AI(gyongyok[0]);
+        }
+
+        foreach (Gyongy gyongy in lbGyongyok.Items)
+            (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
     }
 }

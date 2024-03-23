@@ -15,6 +15,18 @@
         
         <StackPanel>
             <ListBox x:Name="lbGyongyok"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Út hossza: " VerticalContentAlignment="center"/>
+                <TextBox x:Name="txtUthossz" Text="50" VerticalContentAlignment="center"/>
+            </StackPanel>
+
+            <Button Content="Indítás" Click="Inditas_Click"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Stopper" VerticalContentAlignment="center"/>
+                <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
+            </StackPanel>
         </StackPanel>
         
         <h:HelixViewport3D x:Name="ter" Grid.Column="1" ZoomExtentsWhenLoaded="True">
