@@ -42,7 +42,8 @@ public partial class MainWindow : Window
     {
         Betolt("gyongyok.txt");
 
-        gyongyok.ForEach(gyongy => {
+        foreach(Gyongy gyongy in gyongyok)
+        {
             EllipsoidVisual3D gyongy3d = new()
             {
                 RadiusX = .05 * (gyongy.Ertek+1) + 1,
@@ -54,7 +55,7 @@ public partial class MainWindow : Window
 
             gyongy3d.SetName(gyongy.Id.ToString());
             ter.Children.Add(gyongy3d);
-        });
+        }
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)

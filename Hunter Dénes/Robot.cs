@@ -4,7 +4,7 @@ using static Gyongy;
 
 public class Robot
 {
-    private static double UTHOSSZ = 100;
+    private static double UTHOSSZ = 90;
     private static Gyongy ORIGO;
 
     public double X { get; private set; } = 0;
