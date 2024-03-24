@@ -4,113 +4,83 @@ using static Gyongy;
 
 public class Robot
 {
-    private static double UTHOSSZ = 140;
+    private static double UTHOSSZ = 50;
     private static Gyongy ORIGO;
+
 
     public double X { get; private set; } = 0;
     public double Y { get; private set; } = 0;
     public double Z { get; private set; } = 0;
 
-    public Robot() { }
+    public Robot(double uthossz)
+    {
+        UTHOSSZ = uthossz;
+    }
 
-    //public List<Gyongy> AI(Gyongy kezdopont, HashSet<Gyongy> _visited)
-    //{
-    //    ORIGO = kezdopont;
-    //    HashSet<Gyongy> visited = [kezdopont];
-    //    List<Gyongy> optimalis = [kezdopont];
-
-    //    foreach(Gyongy gyongy in gyongyok.Skip(1).Where(G => !visited.Contains(G) && szomszedok[(ORIGO, G)] * 2 <= UTHOSSZ))
-    //    {
-    //        double tavolsag = szomszedok[(ORIGO, gyongy)];
-    //        if(tavolsag * 2 <= UTHOSSZ)
-    //        {
-    //            List<Gyongy> temp = DFS(gyongy, visited, tavolsag);
-    //            if(temp.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
-    //                optimalis = temp;
-    //        }
-    //    }
-
-    //    return optimalis;
-    //}
-
-    //private List<Gyongy> DFS(Gyongy kiindulo, HashSet<Gyongy> _visited, double megtettUt)
-    //{
-    //    HashSet<Gyongy> visited = new(_visited) { kiindulo };
-    //    List<Gyongy> optimalis = [kiindulo];
-
-    //    foreach(var gyongy in gyongyok)
-    //    {
-    //        if(!visited.Contains(gyongy))
-    //        {
-    //            double tavolsag = szomszedok[DictKey(kiindulo, gyongy)];
-    //            if(megtettUt + tavolsag + szomszedok[(ORIGO, gyongy)] <= UTHOSSZ)
-    //            {
-    //                List<Gyongy> temp = DFS(gyongy, visited, megtettUt + tavolsag);
-    //                if(temp.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
-    //                    optimalis = temp;
-    //            }
-    //        }
-    //    }
-
-    //    return optimalis;
-    //}
-
-    public List<Gyongy> AI(Gyongy kezdopont, HashSet<Gyongy> _visited)
+    public IList<Gyongy> AI(Gyongy kezdopont)
     {
         ORIGO = kezdopont;
         HashSet<Gyongy> visited = [kezdopont];
-        List<Gyongy> optimalis = [kezdopont];
+        IList<Gyongy> optimalis = [kezdopont];
+        IEnumerable<Gyongy> szukitett = gyongyok.Skip(1).Where(G => ORIGO.szomszedok[G.Id] * 2 <= UTHOSSZ);
 
-        foreach(Gyongy gyongy in ForCiklus(G => !visited.Contains(G) && ORIGO.szomszedok[G.Id] * 2 <= UTHOSSZ))
+        Parallel.ForEach(szukitett, gyongy =>
         {
             double tavolsag = ORIGO.szomszedok[gyongy.Id];
-            if(tavolsag * 2 <= UTHOSSZ)
+            if (tavolsag * 2 <= UTHOSSZ)
             {
-                List<Gyongy> temp = DFS(gyongy, visited, tavolsag);
-                if(temp.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
+                IList<Gyongy> temp = AtlagosAlgoritmus(gyongy, visited, szukitett, tavolsag);
+                if (temp.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
                     optimalis = temp;
             }
-        }
+        });
 
         return optimalis;
     }
-
-    private List<Gyongy> DFS(Gyongy kiindulo, HashSet<Gyongy> _visited, double megtettUt)
+    private IList<Gyongy> DFS(Gyongy kiindulo, HashSet<Gyongy> _visited, IEnumerable<Gyongy> szukitett, double megtettUt)
     {
         HashSet<Gyongy> visited = new(_visited) { kiindulo };
-        List<Gyongy> optimalis = [kiindulo];
+        IList<Gyongy> optimalis = [kiindulo];
+        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => !visited.Contains(G) && megtettUt+kiindulo.szomszedok[G.Id]+ORIGO.szomszedok[G.Id] <= UTHOSSZ);
 
-        foreach(var gyongy in ForCiklus(G => !visited.Contains(G)))
+        foreach(var gyongy in tovabbSzukitett)
         {
             double tavolsag = kiindulo.szomszedok[gyongy.Id];
-            if(megtettUt + tavolsag + ORIGO.szomszedok[gyongy.Id] <= UTHOSSZ)
+
+            IList<Gyongy> temp = DFS(gyongy, visited, tovabbSzukitett, megtettUt + tavolsag);
+            if(temp.Sum(G => G.Ertek) + kiindulo.Ertek > optimalis.Sum(G => G.Ertek))
             {
-                List<Gyongy> temp = DFS(gyongy, visited, megtettUt + tavolsag);
-                temp.Insert(0, kiindulo);
-                if(temp.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
-                    optimalis = temp;
+                temp.Add(kiindulo);
+                optimalis = temp;
             }
         }
 
         return optimalis;
     }
-
-    private void Greedy(Gyongy kezdopont, HashSet<Gyongy> _visited)
+    private IList<Gyongy> AtlagosAlgoritmus(Gyongy kiindulo, HashSet<Gyongy> _visited, IEnumerable<Gyongy> szukitett, double megtettUt)
     {
+        HashSet<Gyongy> visited = new(_visited) { kiindulo };
+        IList<Gyongy> optimalis = [kiindulo];
+        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => !visited.Contains(G) && megtettUt+kiindulo.szomszedok[G.Id]+ORIGO.szomszedok[G.Id] <= UTHOSSZ);
+        
+        if (tovabbSzukitett.Count() == 0)
+            return optimalis;
 
-    }
+        double atlag = tovabbSzukitett.Average(G => G.Ertek / kiindulo.szomszedok[G.Id]);
 
-    private void Djikstra(Gyongy kezdopont, HashSet<Gyongy> _visited)
-    {
-
-    }
-
-    private IEnumerable<Gyongy> ForCiklus(Func<Gyongy, bool> predicate)
-    {
-        foreach (Gyongy gyongy in gyongyok)
+        foreach (var gyongy in tovabbSzukitett)
         {
-            if(predicate(gyongy))
-                yield return gyongy;
+            if(gyongy.Ertek / kiindulo.szomszedok[gyongy.Id] < atlag)
+                continue;
+
+            IList<Gyongy> temp = AtlagosAlgoritmus(gyongy, visited, tovabbSzukitett, megtettUt + kiindulo.szomszedok[gyongy.Id]);
+            if (temp.Sum(G => G.Ertek) + kiindulo.Ertek > optimalis.Sum(G => G.Ertek))
+            {
+                temp.Add(kiindulo);
+                optimalis = temp;
+            }
         }
+
+        return optimalis;
     }
 }

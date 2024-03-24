@@ -1,7 +1,8 @@
 ﻿namespace Hunter_Dénes;
 
     using HelixToolkit.Wpf;
-    using System.IO;
+using System.Diagnostics;
+using System.IO;
     using System.Runtime.ConstrainedExecution;
     using System.Text;
     using System.Windows;
@@ -15,7 +16,6 @@
     using System.Windows.Navigation;
     using System.Windows.Shapes;
     using static Gyongy;
-    using static Robot;
 
 public partial class MainWindow : Window
 {
@@ -31,31 +31,26 @@ public partial class MainWindow : Window
         DataContext = this;
 
         BetoltGyongyok();
-        lbGyongyok.ItemsSource = new Robot().AI(gyongyok[0], []);
-
-
-        foreach(Gyongy gyongy in lbGyongyok.Items)
-            (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
-        //File.ReadAllBytes("a");
     }
 
     private void BetoltGyongyok()
     {
         Betolt("gyongyok.txt");
 
-        gyongyok.ForEach(gyongy => {
+        foreach(Gyongy gyongy in gyongyok)
+        {
             EllipsoidVisual3D gyongy3d = new()
             {
-                RadiusX = .1 * (gyongy.Ertek+1) + 1,
-                RadiusY = .1 * (gyongy.Ertek+1) + 1,
-                RadiusZ = .1 * (gyongy.Ertek+1) + 1,
-                Center = new Point3D(gyongy.X, gyongy.Y, gyongy.Z),
+                RadiusX = .05 * (gyongy.Ertek+1) + 1,
+                RadiusY = .05 * (gyongy.Ertek+1) + 1,
+                RadiusZ = .05 * (gyongy.Ertek+1) + 1,
+                Center = new Point3D(-gyongy.X, gyongy.Y, -gyongy.Z),
                 Fill = new SolidColorBrush(Color.FromArgb(255, (byte)(255 - gyongy.Ertek * 20), 80, (byte)(gyongy.Ertek * 20)))
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
             ter.Children.Add(gyongy3d);
-        });
+        }
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -76,5 +71,36 @@ public partial class MainWindow : Window
             Z -= sebesség;
 
         kamera.Position = new(X, Y, Z);
+    }
+
+    private void RobotAI()
+    {
+        Robot robot = new(Convert.ToDouble(txtUthossz.Text));
+
+        if (stopper.IsChecked is false)
+        {
+            lbGyongyok.ItemsSource = robot.AI(gyongyok[0]);
+            return;
+        }
+
+        Stopwatch sw = Stopwatch.StartNew();
+
+        lbGyongyok.ItemsSource = robot.AI(gyongyok[0]);
+
+        sw.Stop();
+        MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
+
+    }
+
+    private void Inditas_Click(object sender, RoutedEventArgs e)
+    {
+        Cursor = Cursors.Wait;
+
+        RobotAI();
+
+        Cursor = Cursors.Arrow;
+
+        foreach (Gyongy gyongy in lbGyongyok.Items)
+            (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
     }
 }
