@@ -3,8 +3,9 @@
 namespace Hunter_Dénes;
 public struct Gyongy
 {
+    public static int fileHossz;
     public static Gyongy[] gyongyok;
-    public Dictionary<int, double> szomszedok = [];
+    public Dictionary<int, double> szomszedok;
 
     public int Id { get; init; } = 0;
     public byte X { get; init; } = 0;
@@ -12,9 +13,13 @@ public struct Gyongy
     public byte Z { get; init; } = 0;
     public byte Ertek { get; init; } = 0;
 
-    public Gyongy() { }
+    public Gyongy()
+    {
+        szomszedok = new(fileHossz - 1);
+    }
     public Gyongy(byte[] adatok, int id)
     {
+        szomszedok = new(fileHossz - 1);
         Id = id;
 
         X = adatok[0];
@@ -27,10 +32,12 @@ public struct Gyongy
     {
         using (StreamReader sr = new(path))
         {
-            string sor;
+            string? sor;
             sr.ReadLine();
 
-            gyongyok = new Gyongy[File.ReadLines(path).Count()];
+
+            fileHossz = File.ReadLines(path).Count();
+            gyongyok = new Gyongy[fileHossz];
             gyongyok[0] = new();
 
             int id = 1;

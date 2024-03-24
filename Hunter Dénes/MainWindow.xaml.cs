@@ -16,7 +16,6 @@ using System.IO;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
     using static Gyongy;
-    using static Robot;
 
 public partial class MainWindow : Window
 {
@@ -74,21 +73,32 @@ public partial class MainWindow : Window
         kamera.Position = new(X, Y, Z);
     }
 
+    private void RobotAI()
+    {
+        Robot robot = new(Convert.ToDouble(txtUthossz.Text));
+
+        if (stopper.IsChecked is false)
+        {
+            lbGyongyok.ItemsSource = robot.AI(gyongyok[0]);
+            return;
+        }
+
+        Stopwatch sw = Stopwatch.StartNew();
+
+        lbGyongyok.ItemsSource = robot.AI(gyongyok[0]);
+
+        sw.Stop();
+        MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
+
+    }
+
     private void Inditas_Click(object sender, RoutedEventArgs e)
     {
-        if(stopper.IsChecked is true)
-        {
-            Stopwatch sw = Stopwatch.StartNew();
+        Cursor = Cursors.Wait;
 
-            lbGyongyok.ItemsSource = new Robot(Convert.ToDouble(txtUthossz.Text)).AI(gyongyok[0]);
+        RobotAI();
 
-            sw.Stop();
-            MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
-        }
-        else
-        {
-            lbGyongyok.ItemsSource = new Robot(Convert.ToDouble(txtUthossz.Text)).AI(gyongyok[0]);
-        }
+        Cursor = Cursors.Arrow;
 
         foreach (Gyongy gyongy in lbGyongyok.Items)
             (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
