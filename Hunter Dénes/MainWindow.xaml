@@ -8,55 +8,56 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1200">
     <Grid>
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="200px"/>
-        <ColumnDefinition/>
-    </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200px"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-    <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1">
-        <h:HelixViewport3D.Camera>
-            <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="50, 50, 50" LookDirection="-0.9, -0.9, -0.8" UpDirection="1, 1, 1"/>
-        </h:HelixViewport3D.Camera>
-        <h:SunLight/>
-    </h:HelixViewport3D>
-    <StackPanel>
-        <Button x:Name="BtnBeolvas" Height="50" Click="BtnBeolvas_Click">Gyöngyök beolvasása</Button>
+        <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1">
+            <h:HelixViewport3D.Camera>
+                <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="50, 50, 50" LookDirection="-0.9, -0.9, -0.8" UpDirection="1, 1, 1"/>
+            </h:HelixViewport3D.Camera>
+            <h:SunLight/>
+        </h:HelixViewport3D>
+        
+        <StackPanel>
+            <Button x:Name="BtnBeolvas" Height="50" Click="BtnBeolvas_Click" Content="Gyöngyök beolvasása"/>
 
-        <Button x:Name="BtnVeletlenPalya" Height="50" Click="BtnVeletlenPalya_Click">Véletlenszerű pálya létrehozása</Button>
+            <Button x:Name="BtnVeletlenPalya" Height="50" Click="BtnVeletlenPalya_Click" Content="Véletlenszerű pálya létrehozása"/>
 
-        <Label>Tengeralattjáró kordinátái:</Label>
+            <Label Content="Tengeralattjáró kordinátái:"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Label>X:</Label>
-            <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px"></TextBox>
-            <Label>Y:</Label>
-            <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px"></TextBox>
-            <Label>Z:</Label>
-            <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px"></TextBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="X"/>
+                <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px"/>
+                <Label Content="Y"/>
+                <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px"/>
+                <Label Content="Z"/>
+                <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px"/>
+            </StackPanel>
+
+            <Button x:Name="BtnLerakas" Height="50" Margin="0 10 0 0" Click="BtnLerakas_Click" Content="Tengeralattjáró lerakása"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Út hossza:"/>
+                <TextBox x:Name="txtUthossz" VerticalAlignment="Center" Text="90"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Stopper" VerticalContentAlignment="center"/>
+                <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
+            </StackPanel>
+
+            <Button Content="Út keresése" Click="Inditas_Click"/>
+
+            <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" />
+            <Button x:Name="animation" Click="animation_Click" Content="Animáció"/>
+
+            <Label Content="Algoritmusok:"/>
+            <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
+                <ComboBoxItem IsSelected="True" Content="AtlagosChad" Tag="Chad"/>
+                <ComboBoxItem Content="Griddy" Tag="Griddy"/>
+            </ComboBox>
         </StackPanel>
-
-        <Button x:Name="BtnLerakas" Height="50" Margin="0 10 0 0" Click="BtnLerakas_Click">Tengeralattjáró lerakása</Button>
-
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Út hossza:"/>
-            <TextBox x:Name="txtUthossz" VerticalAlignment="Center" Text="90"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Stopper" VerticalContentAlignment="center"/>
-            <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
-        </StackPanel>
-
-        <Button Content="Út keresése" Click="Inditas_Click"/>
-
-        <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" />
-        <Button x:Name="animation" Click="animation_Click" Content="Animáció"/>
-
-        <Label Content="Algoritmusok:"/>
-        <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
-            <ComboBoxItem IsSelected="True" Content="AtlagosChad" Tag="Chad"/>
-            <ComboBoxItem Content="Griddy" Tag="Griddy"/>
-        </ComboBox>
-    </StackPanel>
-</Grid>
+    </Grid>
 </Window>

@@ -7,7 +7,7 @@ public class Robot
 {
     private static double UTHOSSZ = 50;
     private static Gyongy ORIGO;
-    private static Func<Gyongy, HashSet<Gyongy>, IEnumerable<Gyongy>, double, IList<Gyongy>>? Algoritmus;
+    private static Func<Gyongy, IEnumerable<Gyongy>, double, IList<Gyongy>>? Algoritmus;
 
     public double X { get; private set; } = 0;
     public double Y { get; private set; } = 0;
@@ -28,7 +28,6 @@ public class Robot
 
     public IList<Gyongy> AI()
     {
-        HashSet<Gyongy> visited = [ORIGO];
         IList<Gyongy> optimalis = [ORIGO];
         IEnumerable<Gyongy> szukitett = gyongyok.Skip(1).Where(G => ORIGO.szomszedok[G.Id] * 2 <= UTHOSSZ);
 
@@ -36,7 +35,7 @@ public class Robot
             double tavolsag = ORIGO.szomszedok[gyongy.Id];
             if(tavolsag * 2 <= UTHOSSZ)
             {
-                IList<Gyongy> temp = Algoritmus(gyongy, visited, szukitett, tavolsag);
+                IList<Gyongy> temp = Algoritmus(gyongy, szukitett, tavolsag);
                 if(temp.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
                     optimalis = temp;
             }
@@ -44,17 +43,16 @@ public class Robot
 
         return optimalis;
     }
-    private static IList<Gyongy> DFS(Gyongy kiindulo, HashSet<Gyongy> _visited, IEnumerable<Gyongy> szukitett, double megtettUt)
+    private static IList<Gyongy> DFS(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt)
     {
-        HashSet<Gyongy> visited = new(_visited) { kiindulo };
         IList<Gyongy> optimalis = [kiindulo];
-        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => !visited.Contains(G) && megtettUt + kiindulo.szomszedok[G.Id] + ORIGO.szomszedok[G.Id] <= UTHOSSZ);
+        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => G.Id != kiindulo.Id && megtettUt+kiindulo.szomszedok[G.Id]+ORIGO.szomszedok[G.Id] <= UTHOSSZ);
 
         foreach(var gyongy in tovabbSzukitett)
         {
             double tavolsag = kiindulo.szomszedok[gyongy.Id];
 
-            IList<Gyongy> temp = DFS(gyongy, visited, tovabbSzukitett, megtettUt + tavolsag);
+            IList<Gyongy> temp = DFS(gyongy, tovabbSzukitett, megtettUt + tavolsag);
             if(temp.Sum(G => G.Ertek) + kiindulo.Ertek > optimalis.Sum(G => G.Ertek))
             {
                 temp.Add(kiindulo);
@@ -64,11 +62,10 @@ public class Robot
 
         return optimalis;
     }
-    private static IList<Gyongy> AtlagosAlgoritmus(Gyongy kiindulo, HashSet<Gyongy> _visited, IEnumerable<Gyongy> szukitett, double megtettUt)
+    private static IList<Gyongy> AtlagosAlgoritmus(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt)
     {
-        HashSet<Gyongy> visited = new(_visited) { kiindulo };
         IList<Gyongy> optimalis = [kiindulo];
-        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => !visited.Contains(G) && megtettUt + kiindulo.szomszedok[G.Id] + ORIGO.szomszedok[G.Id] <= UTHOSSZ);
+        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => G.Id != kiindulo.Id && megtettUt+kiindulo.szomszedok[G.Id]+ORIGO.szomszedok[G.Id] <= UTHOSSZ);
 
         if(!tovabbSzukitett.Any())
             return optimalis;
@@ -80,7 +77,7 @@ public class Robot
             if(gyongy.Ertek / kiindulo.szomszedok[gyongy.Id] < atlag)
                 continue;
 
-            IList<Gyongy> temp = AtlagosAlgoritmus(gyongy, visited, tovabbSzukitett, megtettUt + kiindulo.szomszedok[gyongy.Id]);
+            IList<Gyongy> temp = AtlagosAlgoritmus(gyongy, tovabbSzukitett, megtettUt + kiindulo.szomszedok[gyongy.Id]);
             if(temp.Sum(G => G.Ertek) + kiindulo.Ertek > optimalis.Sum(G => G.Ertek))
             {
                 temp.Add(kiindulo);
@@ -90,17 +87,17 @@ public class Robot
 
         return optimalis;
     }
-    private static IList<Gyongy> Greedy(Gyongy kiindulo, HashSet<Gyongy> _visited, IEnumerable<Gyongy> szukitett, double megtettUt)
+    private static IList<Gyongy> Greedy(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt)
     {
-        HashSet<Gyongy> visited = new(_visited) { kiindulo };
         IList<Gyongy> optimalis = [kiindulo];
-        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => !visited.Contains(G) && megtettUt + kiindulo.szomszedok[G.Id] + ORIGO.szomszedok[G.Id] <= UTHOSSZ);
+        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => G.Id != kiindulo.Id && megtettUt+kiindulo.szomszedok[G.Id]+ORIGO.szomszedok[G.Id] <= UTHOSSZ);
 
-        foreach(var gyongy in LegnagyobbNGyongy(kiindulo, tovabbSzukitett, 25))
+        if(!tovabbSzukitett.Any())
+            return optimalis;
+
+        foreach(var gyongy in GreedySzukit(tovabbSzukitett))
         {
-            double tavolsag = kiindulo.szomszedok[gyongy.Id];
-
-            IList<Gyongy> temp = Greedy(gyongy, visited, tovabbSzukitett, megtettUt + tavolsag);
+            IList<Gyongy> temp = Greedy(gyongy, tovabbSzukitett, megtettUt + kiindulo.szomszedok[gyongy.Id]);
             if(temp.Sum(G => G.Ertek) + kiindulo.Ertek > optimalis.Sum(G => G.Ertek))
             {
                 temp.Add(kiindulo);
@@ -111,5 +108,16 @@ public class Robot
         return optimalis;
     }
 
-    private static IEnumerable<Gyongy> LegnagyobbNGyongy(Gyongy kiindulo, IEnumerable<Gyongy> gyongyok, int n) => gyongyok.OrderBy(G => kiindulo.szomszedok[G.Id]).Take(Math.Min(n, gyongyok.Count()));
+    private static IEnumerable<Gyongy> GreedySzukit(IEnumerable<Gyongy> gyongyok)
+    {
+        int max = gyongyok.Max(G => G.Ertek);
+
+        foreach(Gyongy gyongy in  gyongyok)
+        {
+            if(gyongy.Ertek == max)
+            {
+                yield return gyongy;
+            }
+        }
+    }
 }
