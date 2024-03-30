@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Hunter_Dénes"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1200">
-<Grid>
+    <Grid>
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="200px"/>
         <ColumnDefinition/>
@@ -51,6 +51,12 @@
 
         <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" />
         <Button x:Name="animation" Click="animation_Click" Content="Animáció"/>
+
+        <Label Content="Algoritmusok:"/>
+        <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
+            <ComboBoxItem IsSelected="True" Content="AtlagosChad" Tag="Chad"/>
+            <ComboBoxItem Content="Griddy" Tag="Griddy"/>
+        </ComboBox>
     </StackPanel>
 </Grid>
 </Window>

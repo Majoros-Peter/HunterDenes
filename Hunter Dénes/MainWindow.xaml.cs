@@ -229,17 +229,17 @@ public partial class MainWindow : Window
 
     private void RobotAI()
     {
-        Robot robot = new(Convert.ToDouble(txtUthossz.Text));
+        Robot robot = new(Convert.ToDouble(txtUthossz.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag.ToString());
 
         if (stopper.IsChecked is false)
         {
-            lbGyongyok.ItemsSource = robot.AI(gyongyok[0]);
+            lbGyongyok.ItemsSource = robot.AI();
             return;
         }
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        lbGyongyok.ItemsSource = robot.AI(gyongyok[0]);
+        lbGyongyok.ItemsSource = robot.AI();
 
         sw.Stop();
         MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
@@ -269,43 +269,46 @@ public partial class MainWindow : Window
 
     private void Osszekotes()
     {
+        Gyongy kezdet, veg;
+
         for (int i = 1; i < lbGyongyok.Items.Count; i++)
         {
+            kezdet = (lbGyongyok.ItemsSource as List<Gyongy>)[i-1];
+            veg = (lbGyongyok.ItemsSource as List<Gyongy>)[i];
 
-            double[] kezdet = lbGyongyok.Items[i - 1].ToString().Split(' ')[0].Trim('(').Trim(')').Split(';').Select(G => double.Parse(G)).ToArray();
-            double[] veg = lbGyongyok.Items[i].ToString().Split(' ')[0].Trim('(').Trim(')').Split(';').Select(G => double.Parse(G)).ToArray();
             LinesVisual3D vonal3D = new()
             {
                 Thickness = 5,
-                Points = [new Point3D(kezdet[0] * -2, kezdet[1] * 2, kezdet[2] * -2), new Point3D(veg[0] * -2, veg[1] * 2, veg[2] * -2)],
+                Points = [Pont(kezdet), Pont(veg)],
                 Color = Colors.DarkGreen,
             };
-            ter.Children.Add(vonal3D);
 
+            ter.Children.Add(vonal3D);
         }
 
-        double[] elso = lbGyongyok.Items[0].ToString().Split(' ')[0].Trim('(').Trim(')').Split(';').Select(G => double.Parse(G)).ToArray();
+        Gyongy elso = (lbGyongyok.ItemsSource as List<Gyongy>)[0];
         LinesVisual3D elsoVonal = new()
         {
             Thickness = 5,
-            Points = [new Point3D(0, 0, 0), new Point3D(elso[0] * -2, elso[1] * 2, elso[2] * -2)],
+            Points = [new Point3D(0, 0, 0), Pont(elso)],
             Color = Colors.DarkGreen,
         };
-        double[] utolso = lbGyongyok.Items[^1].ToString().Split(' ')[0].Trim('(').Trim(')').Split(';').Select(G => double.Parse(G)).ToArray();
+
+        Gyongy utolso = (lbGyongyok.ItemsSource as List<Gyongy>)[^1];
         LinesVisual3D utolsoVonal = new()
         {
             Thickness = 5,
-            Points = [new Point3D(0, 0, 0), new Point3D(utolso[0] * -2, utolso[1] * 2, utolso[2] * -2)],
+            Points = [new Point3D(0, 0, 0), Pont(utolso)],
             Color = Colors.DarkGreen,
         };
+
         ter.Children.Add(elsoVonal);
         ter.Children.Add(utolsoVonal);
     }
 
     private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        int[] koordinatak = lbGyongyok.SelectedItem.ToString().Split(' ')[0].Trim('(').Trim(')').Split(';').Select(G => int.Parse(G)).ToArray();
-        camera.Position = new Point3D(-koordinatak[0] * 2 + 5, koordinatak[1] * 2 + 5, -koordinatak[2] * 2 + 5);
+        camera.Position = Pont((Gyongy)lbGyongyok.SelectedItem, 5, 5, 5);
         camera.LookDirection = new Vector3D(-0.9, -0.9, -0.9);
         camera.UpDirection = new Vector3D(0, 0, 1);
     }

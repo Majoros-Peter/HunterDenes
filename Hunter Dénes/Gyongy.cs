@@ -1,9 +1,10 @@
 ﻿using System.IO;
+using System.Windows.Media.Media3D;
 
 namespace Hunter_Dénes;
 public struct Gyongy
 {
-    public static int fileHossz;
+    private static int fileHossz;
     public static Gyongy[] gyongyok;
     public Dictionary<int, double> szomszedok;
 
@@ -92,6 +93,12 @@ public struct Gyongy
 
         return Math.Sqrt(x + y + z);
     }
+    public static Point3D Pont(Gyongy gyongy, int xEltolas=0, int yEltolas=0, int zEltolas=0)
+    {
+        return new(gyongy.X * -2 + xEltolas,
+                   gyongy.Y * 2 + yEltolas,
+                   gyongy.Z * -2 + zEltolas);
+    }
 
-    public override string ToString() => $"({X};{Y};{Z}) {Ertek} Mihazánk fitying";
+    public override string ToString() => $"({X};{Y};{Z}) {Ertek} Zed";
 }

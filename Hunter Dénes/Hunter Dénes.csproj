@@ -20,7 +20,7 @@
     <None Update="Tengeralatjaro.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="txt.txt">
+    <None Update="ofő.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
