@@ -18,6 +18,8 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static Gyongy;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public partial class MainWindow : Window
 {
@@ -199,11 +201,76 @@ public partial class MainWindow : Window
 
     private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
     {
-        BetoltGyongyok(new Random());
+        if (Ellenorzes())
+        {
+            BetoltGyongyok(new Random());
 
-        LerakTengeralattjaro(HajoX, HajoY, HajoZ);
-        KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
-        ter.Children.Add(new SunLight());
+            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+
+            Hosszusag = new Random().Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+            Szelesseg = new Random().Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+            Magassag = new Random().Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+
+            KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
+
+            ter.Children.Add(new SunLight());
+        }
+    }
+
+    private bool Ellenorzes()
+    {
+        if (
+                IntCheck(txtTerHosszusagMin) && IntCheck(txtTerHosszusagMax) &&
+                IntCheck(txtTerSzelessegMin) && IntCheck(txtTerSzelessegMax) &&
+                IntCheck(txtTerMagassagMin) && IntCheck(txtTerMagassagMax) &&
+                IntCheck(txtGyongyokSzamaMin) && IntCheck(txtGyongyokSzamaMax)
+           ){}
+        else
+        {
+            MessageBox.Show("Érték csak egész szám lehet.");
+            return false;
+        }
+
+        if (
+                MinMaxCheck(txtTerHosszusagMin, txtTerHosszusagMax) &&
+                MinMaxCheck(txtTerSzelessegMin, txtTerSzelessegMax) &&
+                MinMaxCheck(txtTerMagassagMin, txtTerMagassagMax) &&
+                MinMaxCheck(txtGyongyokSzamaMin, txtGyongyokSzamaMax)
+           ){}
+        else
+        {
+            MessageBox.Show("A minimum érték nem lehet nagyobb a maximumnál.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IntCheck(TextBox szoveg)
+    {
+        int szam;
+        bool alakithato = int.TryParse(szoveg.Text, out szam);
+
+        if (alakithato)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private bool MinMaxCheck(TextBox min, TextBox max)
+    {
+        if (Convert.ToInt32(min.Text) <= Convert.ToInt32(max.Text))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void BtnLerakas_Click(object sender, RoutedEventArgs e)
