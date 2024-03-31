@@ -157,43 +157,66 @@ public partial class MainWindow : Window
 
     #region __UI Elemek__
     private void Osszekotes()
+{
+    ter.Children.Clear();
+    Gyongy kezdet, veg;
+
+    for (int i = 1; i < lbGyongyok.Items.Count; i++)
     {
-        Gyongy kezdet, veg;
+        kezdet = (lbGyongyok.ItemsSource as List<Gyongy>)[i - 1];
+        veg = (lbGyongyok.ItemsSource as List<Gyongy>)[i];
 
-        for (int i = 1; i < lbGyongyok.Items.Count; i++)
-        {
-            kezdet = (lbGyongyok.ItemsSource as List<Gyongy>)[i-1];
-            veg = (lbGyongyok.ItemsSource as List<Gyongy>)[i];
-
-            LinesVisual3D vonal3D = new()
-            {
-                Thickness = 5,
-                Points = [Pont(kezdet), Pont(veg)],
-                Color = Colors.DarkGreen,
-            };
-
-            ter.Children.Add(vonal3D);
-        }
-
-        Gyongy elso = (lbGyongyok.ItemsSource as List<Gyongy>)[0];
-        LinesVisual3D elsoVonal = new()
+        LinesVisual3D vonal3D = new()
         {
             Thickness = 5,
-            Points = [new Point3D(0, 0, 0), Pont(elso)],
+            Points = [Pont(kezdet), Pont(veg)],
             Color = Colors.DarkGreen,
         };
 
-        Gyongy utolso = (lbGyongyok.ItemsSource as List<Gyongy>)[^1];
-        LinesVisual3D utolsoVonal = new()
-        {
-            Thickness = 5,
-            Points = [new Point3D(0, 0, 0), Pont(utolso)],
-            Color = Colors.DarkGreen,
-        };
-
-        ter.Children.Add(elsoVonal);
-        ter.Children.Add(utolsoVonal);
+        ter.Children.Add(vonal3D);
     }
+
+    Gyongy elso = (lbGyongyok.ItemsSource as List<Gyongy>)[0];
+    LinesVisual3D elsoVonal = new()
+    {
+        Thickness = 5,
+        Points = [new Point3D(0, 0, 0), Pont(elso)],
+        Color = Colors.DarkGreen,
+    };
+
+    Gyongy utolso = (lbGyongyok.ItemsSource as List<Gyongy>)[^1];
+    LinesVisual3D utolsoVonal = new()
+    {
+        Thickness = 5,
+        Points = [new Point3D(0, 0, 0), Pont(utolso)],
+        Color = Colors.DarkGreen,
+    };
+
+    ter.Children.Add(elsoVonal);
+    ter.Children.Add(utolsoVonal);
+    foreach (Gyongy gyongy in gyongyok)
+    {
+        Hosszusag = gyongy.X < Hosszusag ? Hosszusag : gyongy.X;
+        Szelesseg = gyongy.Y < Szelesseg ? Szelesseg : gyongy.Y;
+        Magassag = gyongy.Z < Magassag ? Magassag : gyongy.Z;
+
+        EllipsoidVisual3D gyongy3d = new()
+        {
+            RadiusX = .05 * (gyongy.Ertek + 1) + 1,
+            RadiusY = .05 * (gyongy.Ertek + 1) + 1,
+            RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
+            Center = new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2),
+            Fill = new SolidColorBrush(szinek[gyongy.Ertek % szinek.Length])
+        };
+
+        gyongy3d.SetName(gyongy.Id.ToString());
+        ter.Children.Add(gyongy3d);
+    }
+    LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+    KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
+    ter.Children.Add(new SunLight());
+
+}
     private void KeszitAkvarium(double x, double y, double z)
     {
         SolidColorBrush viz = new(Colors.LightBlue)
