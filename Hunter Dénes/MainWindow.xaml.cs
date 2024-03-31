@@ -1,3 +1,5 @@
+using Hunter_Dénes.Classok;
+
 namespace Hunter_Dénes;
 
 using HelixToolkit.Wpf;
@@ -49,7 +51,7 @@ public partial class MainWindow : Window
         szinek =
         [
             Color.FromRgb(0, 0, 0),
-            Color.FromRgb(255, 249, 61),
+            Color.FromRgb(31, 100, 238),
             Color.FromRgb(17, 73, 186),
             Color.FromRgb(41, 20, 199),
             Color.FromRgb(87, 18, 224),
@@ -57,7 +59,7 @@ public partial class MainWindow : Window
             Color.FromRgb(119, 40, 189),
             Color.FromRgb(174, 52, 201),
             Color.FromRgb(217, 52, 159),
-            Color.FromRgb(220, 227, 0)
+            Color.FromRgb(255, 249, 61)
         ];
     }
     private void BetoltGyongyok(string path)
@@ -87,28 +89,24 @@ public partial class MainWindow : Window
     }
     private void BetoltGyongyok()
     {
+        ter.Children.Clear();
+
         Random rand = new();
-        Func<byte> hossz = () => (byte)rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) + 1, Convert.ToInt32(txtTerHosszusagMax.Text) + 1);
-        Func<byte> szelesseg = () => (byte)rand.Next(Convert.ToInt32(txtTerSzelessegMin.Text) + 1, Convert.ToInt32(txtTerSzelessegMax.Text) + 1);
-        Func<byte> magassag = () => (byte)rand.Next(Convert.ToInt32(txtTerMagassagMin.Text) + 1, Convert.ToInt32(txtTerMagassagMax.Text) + 1);
+        Func<byte> x = () => (byte)rand.Next((int)Hosszusag+1);
+        Func<byte> y = () => (byte)rand.Next((int)Szelesseg+1);
+        Func<byte> z = () => (byte)rand.Next((int)Magassag+1);
         int gyongyokSzama = rand.Next(Convert.ToInt32(txtGyongyokSzamaMin.Text) + 1, Convert.ToInt32(txtGyongyokSzamaMax.Text) + 1);
         Func<byte> ertek = () => (byte)(rand.Next((int)slGyongyErtekek.Value)+1);
 
-        ter.Children.Clear();
-
-        Betolt(hossz, szelesseg, magassag, ertek, gyongyokSzama);
+        Betolt(x, y, z, ertek, gyongyokSzama);
 
         foreach (Gyongy gyongy in gyongyok)
         {
-            Hosszusag = Math.Max(gyongy.X, Hosszusag);
-            Szelesseg = Math.Max(gyongy.Y, Szelesseg);
-            Magassag = Math.Max(gyongy.Z, Magassag);
-
             EllipsoidVisual3D gyongy3d = new()
             {
-                RadiusX = .05 * (gyongy.Ertek + 1) + 1,
-                RadiusY = .05 * (gyongy.Ertek + 1) + 1,
-                RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
+                RadiusX = Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusY = Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusZ = Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
                 Fill = new SolidColorBrush(szinek[gyongy.Ertek])
             };
@@ -157,66 +155,66 @@ public partial class MainWindow : Window
 
     #region __UI Elemek__
     private void Osszekotes()
-{
-    ter.Children.Clear();
-    Gyongy kezdet, veg;
-
-    for (int i = 1; i < lbGyongyok.Items.Count; i++)
     {
-        kezdet = (lbGyongyok.ItemsSource as List<Gyongy>)[i - 1];
-        veg = (lbGyongyok.ItemsSource as List<Gyongy>)[i];
+        ter.Children.Clear();
+        Gyongy kezdet, veg;
 
-        LinesVisual3D vonal3D = new()
+        for(int i = 1; i < lbGyongyok.Items.Count; i++)
+        {
+            kezdet = (lbGyongyok.ItemsSource as List<Gyongy>)[i - 1];
+            veg = (lbGyongyok.ItemsSource as List<Gyongy>)[i];
+
+            LinesVisual3D vonal3D = new()
+            {
+                Thickness = 5,
+                Points = [Pont(kezdet), Pont(veg)],
+                Color = Colors.DarkGreen,
+            };
+
+            ter.Children.Add(vonal3D);
+        }
+
+        Gyongy elso = (lbGyongyok.ItemsSource as List<Gyongy>)[0];
+        LinesVisual3D elsoVonal = new()
         {
             Thickness = 5,
-            Points = [Pont(kezdet), Pont(veg)],
+            Points = [new Point3D(0, 0, 0), Pont(elso)],
             Color = Colors.DarkGreen,
         };
 
-        ter.Children.Add(vonal3D);
-    }
-
-    Gyongy elso = (lbGyongyok.ItemsSource as List<Gyongy>)[0];
-    LinesVisual3D elsoVonal = new()
-    {
-        Thickness = 5,
-        Points = [new Point3D(0, 0, 0), Pont(elso)],
-        Color = Colors.DarkGreen,
-    };
-
-    Gyongy utolso = (lbGyongyok.ItemsSource as List<Gyongy>)[^1];
-    LinesVisual3D utolsoVonal = new()
-    {
-        Thickness = 5,
-        Points = [new Point3D(0, 0, 0), Pont(utolso)],
-        Color = Colors.DarkGreen,
-    };
-
-    ter.Children.Add(elsoVonal);
-    ter.Children.Add(utolsoVonal);
-    foreach (Gyongy gyongy in gyongyok)
-    {
-        Hosszusag = gyongy.X < Hosszusag ? Hosszusag : gyongy.X;
-        Szelesseg = gyongy.Y < Szelesseg ? Szelesseg : gyongy.Y;
-        Magassag = gyongy.Z < Magassag ? Magassag : gyongy.Z;
-
-        EllipsoidVisual3D gyongy3d = new()
+        Gyongy utolso = (lbGyongyok.ItemsSource as List<Gyongy>)[^1];
+        LinesVisual3D utolsoVonal = new()
         {
-            RadiusX = .05 * (gyongy.Ertek + 1) + 1,
-            RadiusY = .05 * (gyongy.Ertek + 1) + 1,
-            RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
-            Center = new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2),
-            Fill = new SolidColorBrush(szinek[gyongy.Ertek % szinek.Length])
+            Thickness = 5,
+            Points = [new Point3D(0, 0, 0), Pont(utolso)],
+            Color = Colors.DarkGreen,
         };
 
-        gyongy3d.SetName(gyongy.Id.ToString());
-        ter.Children.Add(gyongy3d);
-    }
-    LerakTengeralattjaro(HajoX, HajoY, HajoZ);
-    KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
-    ter.Children.Add(new SunLight());
+        ter.Children.Add(elsoVonal);
+        ter.Children.Add(utolsoVonal);
+        foreach(Gyongy gyongy in gyongyok)
+        {
+            Hosszusag = gyongy.X < Hosszusag ? Hosszusag : gyongy.X;
+            Szelesseg = gyongy.Y < Szelesseg ? Szelesseg : gyongy.Y;
+            Magassag = gyongy.Z < Magassag ? Magassag : gyongy.Z;
 
-}
+            EllipsoidVisual3D gyongy3d = new()
+            {
+                RadiusX = .05 * (gyongy.Ertek + 1) + 1,
+                RadiusY = .05 * (gyongy.Ertek + 1) + 1,
+                RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
+                Center = new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2),
+                Fill = new SolidColorBrush(szinek[gyongy.Ertek % szinek.Length])
+            };
+
+            gyongy3d.SetName(gyongy.Id.ToString());
+            ter.Children.Add(gyongy3d);
+        }
+        LerakTengeralattjaro();
+        KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
+        ter.Children.Add(new SunLight());
+
+    }
     private void KeszitAkvarium(double x, double y, double z)
     {
         SolidColorBrush viz = new(Colors.LightBlue)
@@ -256,85 +254,12 @@ public partial class MainWindow : Window
         };
         ter.Children.Add(vonal3D);
     }
-    private void LerakTengeralattjaro(double x, double y, double z)
+    private void LerakTengeralattjaro()
     {
-        var importer = new ModelImporter();
-        var model = importer.Load("Tengeralatjaro.obj");
-
-        ModelVisual3D modelVisual = new ModelVisual3D
-        {
-            Content = model
-        };
-
-        // Hol legyen a tengeralattjáró
-        Point3D position = new(x / 10.0, y / 10.0 + 0.2, z / 10.0);
-        TranslateTransform3D translation = new(position.X, position.Y, position.Z);
-
-        ScaleTransform3D scale = new(18, 18, 18);
-        RotateTransform3D rotate = new(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90));
-        Transform3DGroup transformGroup = new();
-        transformGroup.Children.Add(rotate);
-        transformGroup.Children.Add(translation);
-        transformGroup.Children.Add(scale);
-
-        modelVisual.Transform = transformGroup;
-        ter.Children.Add(modelVisual);
-    }
-    private void TengeralattjaroMozgat(float X1, float Y1, float Z1, float X2, float Y2, float Z2)
-    {
-        var importer = new ModelImporter();
-        var model = importer.Load("Tengeralatjaro.obj");
-
-        // Modell létrehozása
-        ModelVisual3D modelVisual = new ModelVisual3D
-        {
-            Content = model
-        };
-
-        Point3D position = new Point3D(X1, Y1, Z1);
-
-        // Transformációk létrehozása
-        TranslateTransform3D translation = new TranslateTransform3D(position.X, position.Y, position.Z);
-        ScaleTransform3D scale = new ScaleTransform3D(18, 18, 18);
-        RotateTransform3D rotate = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90));
-
-        // Transformációk hozzáadása a modellhez
-        Transform3DGroup transformGroup = new Transform3DGroup();
-        transformGroup.Children.Add(translation);
-        transformGroup.Children.Add(scale);
-        transformGroup.Children.Add(rotate);
-        modelVisual.Transform = transformGroup;
-
-        // Modell hozzáadása a viewport-hoz
-        ter.Children.Add(modelVisual);
-
-        // Animáció létrehozása
-        Point3D newPosition = new Point3D(X2, Y2, Z2); // Példaérték, cseréld le a tényleges értékre
-        DoubleAnimation animationX = new DoubleAnimation
-        {
-            From = position.X,
-            To = newPosition.X,
-            Duration = TimeSpan.FromSeconds(3),
-        };
-
-        DoubleAnimation animationY = new DoubleAnimation
-        {
-            From = position.Y,
-            To = newPosition.Y,
-            Duration = TimeSpan.FromSeconds(3),
-        };
-
-        DoubleAnimation animationZ = new DoubleAnimation
-        {
-            From = position.Z,
-            To = newPosition.Z,
-            Duration = TimeSpan.FromSeconds(3),
-        };
-
-        // Animációk hozzáadása a TranslateTransform3D objektumhoz
-        translation.BeginAnimation(TranslateTransform3D.OffsetXProperty, animationX);
-        translation.BeginAnimation(TranslateTransform3D.OffsetYProperty, animationY);
-        translation.BeginAnimation(TranslateTransform3D.OffsetZProperty, animationZ);
+        var existingViewport = ter.Viewport;
+        string objFilePath = "Jarmu/TengeralattjaroSzines.obj";
+        string mtlFilePath = "Jarmu/TengeralattjaroSzines.mtl";
+        ObjImporter.ImportObjWithColors(objFilePath, mtlFilePath, existingViewport, 0.01);
     }
     #endregion
 
@@ -350,7 +275,7 @@ public partial class MainWindow : Window
         {
             BetoltGyongyok(openFileDialog.FileName);
 
-            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+            LerakTengeralattjaro();
             KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
             ter.Children.Add(new SunLight());
         }
@@ -363,7 +288,7 @@ public partial class MainWindow : Window
             HajoY = Convert.ToDouble(TbY.Text);
             HajoZ = Convert.ToDouble(TbZ.Text);
 
-            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+            LerakTengeralattjaro();
             KeszitAkvarium(2 - (Hosszusag + 4), 2 * Szelesseg + 4, -(2 * Magassag + 4));
 
             ter.Children.Add(new SunLight());
@@ -399,29 +324,23 @@ public partial class MainWindow : Window
         camera.LookDirection = new Vector3D(-0.9, -0.9, -0.9);
         camera.UpDirection = new Vector3D(0, 0, 1);
     }
-    private void animation_Click(object sender, RoutedEventArgs e)
-    {
-
-        for (int i = 1; i < gyongyok.Length; i++)
-        {
-            TengeralattjaroMozgat(0, 0, 0, 0f, 0f, -2f);
-        }
-
-
-
-    }
     private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
     {
+        Random rand = new();
+
         if(!Ellenorzes())
             return;
 
 
+        Hosszusag = rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+        Szelesseg = rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+        Magassag = rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+
         BetoltGyongyok();
 
-        LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+        LerakTengeralattjaro();
         KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
         ter.Children.Add(new SunLight());
     }
     #endregion
-
 }

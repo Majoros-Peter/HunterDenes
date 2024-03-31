@@ -1,0 +1,16 @@
+# Exported from 3D Builder
+
+newmtl Metallic_0
+Kd 1.000000 0.792157 0.094118
+
+newmtl Metallic_1
+Kd 0.501961 0.501961 0.501961
+
+newmtl Metallic_2
+Kd 1.000000 1.000000 1.000000
+
+newmtl Metallic_3
+Kd 0.996078 0.996078 0.996078
+
+newmtl Metallic_4
+Kd 0.737255 0.803922 1.000000

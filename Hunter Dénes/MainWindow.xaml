@@ -65,7 +65,6 @@
                     <Button Content="Út keresése" Click="Inditas_Click"/>
 
                     <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick"/>
-                    <Button x:Name="animation" Click="animation_Click" Content="Animáció"/>
 
                     <Label Content="Algoritmusok:"/>
                     <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
@@ -88,9 +87,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerHosszusagMin" Style="{StaticResource szam}" Text="1"/>
+                        <TextBox x:Name="txtTerHosszusagMin" Style="{StaticResource szam}" Text="2"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerHosszusagMax" Style="{StaticResource szam}" Text="50"/>
+                        <TextBox x:Name="txtTerHosszusagMax" Style="{StaticResource szam}" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -98,9 +97,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerSzelessegMin" Style="{StaticResource szam}" Text="1"/>
+                        <TextBox x:Name="txtTerSzelessegMin" Style="{StaticResource szam}" Text="2"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerSzelessegMax" Style="{StaticResource szam}" Text="50"/>
+                        <TextBox x:Name="txtTerSzelessegMax" Style="{StaticResource szam}" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -108,9 +107,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér magassága:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerMagassagMin" Style="{StaticResource szam}" Text="1"/>
+                        <TextBox x:Name="txtTerMagassagMin" Style="{StaticResource szam}" Text="2"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerMagassagMax" Style="{StaticResource szam}" Text="50"/>
+                        <TextBox x:Name="txtTerMagassagMax" Style="{StaticResource szam}" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -120,7 +119,7 @@
                         <Label Content="Minimum:"/>
                         <TextBox x:Name="txtGyongyokSzamaMin" Style="{StaticResource szam}" Text="1"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtGyongyokSzamaMax" Style="{StaticResource szam}" Text="100"/>
+                        <TextBox x:Name="txtGyongyokSzamaMax" Style="{StaticResource szam}" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
