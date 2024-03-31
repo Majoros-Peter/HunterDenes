@@ -7,6 +7,13 @@
         xmlns:local="clr-namespace:Hunter_Dénes"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1400">
+    <Window.Resources>
+        <Style TargetType="TextBox" x:Key="szam">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <EventSetter Event="PreviewTextInput" Handler="TextBox_PreviewTextInput"/>
+        </Style>
+    </Window.Resources>
+    
     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -22,24 +29,25 @@
                 <h:SunLight/>
             </h:HelixViewport3D>
         
+            <!--#region __Kezelő panel__-->
             <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0 0 1 0" Padding="5">
                 <Border.Background>
                     <SolidColorBrush Color="#e8f1f2" Opacity="0.6"/>
                 </Border.Background>
                 <StackPanel>
-                    <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20">Kezelő panel</Label>
-                
+                    <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Kezelő panel"/>
+
                     <Button x:Name="BtnBeolvas" Height="50" Click="BtnBeolvas_Click" Content="Gyöngyök beolvasása"/>
 
                     <Label Content="Tengeralattjáró kordinátái:"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="X"/>
-                        <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px"/>
+                        <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px" Style="{StaticResource szam}"/>
                         <Label Content="Y"/>
-                        <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px"/>
+                        <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px" Style="{StaticResource szam}"/>
                         <Label Content="Z"/>
-                        <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px"/>
+                        <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px" Style="{StaticResource szam}"/>
                     </StackPanel>
 
                     <Button x:Name="BtnLerakas" Height="50" Margin="0 10 0 0" Click="BtnLerakas_Click" Content="Tengeralattjáró lerakása"/>
@@ -56,73 +64,78 @@
 
                     <Button Content="Út keresése" Click="Inditas_Click"/>
 
-                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" />
+                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick"/>
                     <Button x:Name="animation" Click="animation_Click" Content="Animáció"/>
 
                     <Label Content="Algoritmusok:"/>
                     <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
-                        <ComboBoxItem IsSelected="True" Content="AtlagosChad" Tag="Chad"/>
-                        <ComboBoxItem Content="Griddy" Tag="Griddy"/>
+                        <ComboBoxItem IsSelected="True" Content="Lassabb, de biztosabb útvonal" Tag="Chad"/>
+                        <ComboBoxItem Content="Gyors, megbízhatatlan (mohó) útvonal" Tag="Griddy"/>
                     </ComboBox>
                 </StackPanel>
             </Border>
-
+            <!--#endregion-->
+            
+            <!--#region __Random generálás__-->
             <Border Grid.Column="2" BorderBrush="LightGray" BorderThickness="1 0 0 0">
                 <Border.Background>
                     <SolidColorBrush Color="#e8f1f2" Opacity="0.6"/>
                 </Border.Background>
             
                 <StackPanel>
-                    <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20">Random generálás</Label>
-                    <Label FontSize="18" HorizontalAlignment="Center">Tér hosszúsága:</Label>
+                    <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Random generálás"/>
+                    
+                    <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label>Minimum:</Label>
-                        <TextBox x:Name="txtTerHosszusagMin" VerticalAlignment="Center" Text="1"/>
-                        <Label>Maximum:</Label>
-                        <TextBox x:Name="txtTerHosszusagMax" VerticalAlignment="Center" Text="50"/>
-                    </StackPanel>
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"></Border>
-                    <Label FontSize="18" HorizontalAlignment="Center">Tér szélessége:</Label>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label>Minimum:</Label>
-                        <TextBox x:Name="txtTerSzelessegMin" VerticalAlignment="Center" Text="1"/>
-                        <Label>Maximum:</Label>
-                        <TextBox x:Name="txtTerSzelessegMax" VerticalAlignment="Center" Text="50"/>
-                    </StackPanel>
-                
-                
-                
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"></Border>
-                
-                    <Label FontSize="18" HorizontalAlignment="Center">Tér magassága:</Label>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label>Minimum:</Label>
-                        <TextBox x:Name="txtTerMagassagMin" VerticalAlignment="Center" Text="1"/>
-                        <Label>Maximum:</Label>
-                        <TextBox x:Name="txtTerMagassagMax" VerticalAlignment="Center" Text="50"/>
-                    </StackPanel>
-                
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"></Border>
-
-                    <Label FontSize="18" HorizontalAlignment="Center">Gyöngyök száma:</Label>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label>Minimum:</Label>
-                        <TextBox x:Name="txtGyongyokSzamaMin" VerticalAlignment="Center" Text="1"/>
-                        <Label>Maximum:</Label>
-                        <TextBox x:Name="txtGyongyokSzamaMax" VerticalAlignment="Center" Text="100"/>
+                        <Label Content="Minimum:"/>
+                        <TextBox x:Name="txtTerHosszusagMin" Style="{StaticResource szam}" Text="1"/>
+                        <Label Content="Maximum:"/>
+                        <TextBox x:Name="txtTerHosszusagMax" Style="{StaticResource szam}" Text="50"/>
                     </StackPanel>
 
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"></Border>
+                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+                    
+                    <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Label Content="Minimum:"/>
+                        <TextBox x:Name="txtTerSzelessegMin" Style="{StaticResource szam}" Text="1"/>
+                        <Label Content="Maximum:"/>
+                        <TextBox x:Name="txtTerSzelessegMax" Style="{StaticResource szam}" Text="50"/>
+                    </StackPanel>
 
-                    <TextBlock FontSize="18" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="10">Gyöngyök értékének terjedelme:</TextBlock>
+                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                    <Label FontSize="18" HorizontalAlignment="Center" Content="Tér magassága:"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Label Content="Minimum:"/>
+                        <TextBox x:Name="txtTerMagassagMin" Style="{StaticResource szam}" Text="1"/>
+                        <Label Content="Maximum:"/>
+                        <TextBox x:Name="txtTerMagassagMax" Style="{StaticResource szam}" Text="50"/>
+                    </StackPanel>
+
+                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                    <Label FontSize="18" HorizontalAlignment="Center" Content="Gyöngyök száma:"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Label Content="Minimum:"/>
+                        <TextBox x:Name="txtGyongyokSzamaMin" Style="{StaticResource szam}" Text="1"/>
+                        <Label Content="Maximum:"/>
+                        <TextBox x:Name="txtGyongyokSzamaMax" Style="{StaticResource szam}" Text="100"/>
+                    </StackPanel>
+
+                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                    <TextBlock FontSize="18" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="10" Text="Gyöngyök értékének terjedelme:"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Label FontSize="14">1</Label>
-                        <Slider Width="150" Minimum="1" Maximum="9" Value="9" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"></Slider>
-                        <Label FontSize="14">9</Label>
+                        <Label FontSize="14" Content="1"/>
+                        <Slider x:Name="slGyongyErtekek" Width="150" Minimum="1" Maximum="9" Value="9" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                        <Label FontSize="14" Content="9"/>
                     </StackPanel>
-                    <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Margin="5 10 5 5" FontSize="18" Height="40">Generálás</Button>
+                    
+                    <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Margin="5 10 5 5" FontSize="18" Height="40" Content="Generálás"/>
                 </StackPanel>
             </Border>
+            <!--#endregion-->
         </Grid>
     </Border>
 </Window>

@@ -59,16 +59,15 @@ public struct Gyongy
             sr.Close();
         }
     }
-    public static void Betolt(Random rand)
-    {
-        fileHossz = rand.Next(50, 221);
 
-        gyongyok = new Gyongy[fileHossz];
+    public static void Betolt(Func<byte> x, Func<byte> y, Func<byte> z, Func<byte> ertek, int gyongyokSzama)
+    {
+        gyongyok = new Gyongy[fileHossz = gyongyokSzama];
         gyongyok[0] = new();
 
         for(int id = 1; id < fileHossz; id++)
         {
-            Gyongy gyongy = new([(byte)(rand.Next(40) * 2), (byte)(rand.Next(40) * 2), (byte)(rand.Next(30) * 2), (byte)(rand.Next(9) + 1)], id);
+            Gyongy gyongy = new([x(), y(), z(), ertek()], id);
 
             for(int i = 0; i < id; i++)
             {

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,8 +19,6 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static Gyongy;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public partial class MainWindow : Window
 {
@@ -33,10 +32,8 @@ public partial class MainWindow : Window
     public double Hosszusag { get; set; } = 5;
     public double Szelesseg { get; set; } = 5;
     public double Magassag { get; set; } = 5;
-
-
-
     #endregion
+
     public MainWindow()
     {
 
@@ -44,14 +41,14 @@ public partial class MainWindow : Window
         DataContext = this;
 
         InitSzinek();
-
-
     }
 
+    #region __Backend__
     private void InitSzinek()
     {
-        szinek = new Color[]
-        {
+        szinek =
+        [
+            Color.FromRgb(0, 0, 0),
             Color.FromRgb(255, 249, 61),
             Color.FromRgb(17, 73, 186),
             Color.FromRgb(41, 20, 199),
@@ -61,9 +58,8 @@ public partial class MainWindow : Window
             Color.FromRgb(174, 52, 201),
             Color.FromRgb(217, 52, 159),
             Color.FromRgb(220, 227, 0)
-        };
+        ];
     }
-
     private void BetoltGyongyok(string path)
     {
         ter.Children.Clear();
@@ -72,228 +68,55 @@ public partial class MainWindow : Window
 
         foreach (Gyongy gyongy in gyongyok)
         {
-            Hosszusag = gyongy.X < Hosszusag ? Hosszusag : gyongy.X;
-            Szelesseg = gyongy.Y < Szelesseg ? Szelesseg : gyongy.Y;
-            Magassag = gyongy.Z < Magassag ? Magassag : gyongy.Z;
+            Hosszusag = Math.Max(gyongy.X, Hosszusag);
+            Szelesseg = Math.Max(gyongy.Y, Szelesseg);
+            Magassag = Math.Max(gyongy.Z, Magassag);
 
             EllipsoidVisual3D gyongy3d = new()
             {
                 RadiusX = .05 * (gyongy.Ertek + 1) + 1,
                 RadiusY = .05 * (gyongy.Ertek + 1) + 1,
                 RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
-                Center = new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2),
-                Fill = new SolidColorBrush(szinek[gyongy.Ertek % szinek.Length])
+                Center = Pont(gyongy),
+                Fill = new SolidColorBrush(szinek[gyongy.Ertek])
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
             ter.Children.Add(gyongy3d);
         }
     }
-
-    private void BetoltGyongyok(Random rand)
+    private void BetoltGyongyok()
     {
+        Random rand = new();
+        Func<byte> hossz = () => (byte)rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) + 1, Convert.ToInt32(txtTerHosszusagMax.Text) + 1);
+        Func<byte> szelesseg = () => (byte)rand.Next(Convert.ToInt32(txtTerSzelessegMin.Text) + 1, Convert.ToInt32(txtTerSzelessegMax.Text) + 1);
+        Func<byte> magassag = () => (byte)rand.Next(Convert.ToInt32(txtTerMagassagMin.Text) + 1, Convert.ToInt32(txtTerMagassagMax.Text) + 1);
+        int gyongyokSzama = rand.Next(Convert.ToInt32(txtGyongyokSzamaMin.Text) + 1, Convert.ToInt32(txtGyongyokSzamaMax.Text) + 1);
+        Func<byte> ertek = () => (byte)(rand.Next((int)slGyongyErtekek.Value)+1);
+
         ter.Children.Clear();
 
-        Betolt(rand);
+        Betolt(hossz, szelesseg, magassag, ertek, gyongyokSzama);
 
         foreach (Gyongy gyongy in gyongyok)
         {
-            Hosszusag = gyongy.X < Hosszusag ? Hosszusag : gyongy.X;
-            Szelesseg = gyongy.Y < Szelesseg ? Szelesseg : gyongy.Y;
-            Magassag = gyongy.Z < Magassag ? Magassag : gyongy.Z;
+            Hosszusag = Math.Max(gyongy.X, Hosszusag);
+            Szelesseg = Math.Max(gyongy.Y, Szelesseg);
+            Magassag = Math.Max(gyongy.Z, Magassag);
 
             EllipsoidVisual3D gyongy3d = new()
             {
                 RadiusX = .05 * (gyongy.Ertek + 1) + 1,
                 RadiusY = .05 * (gyongy.Ertek + 1) + 1,
                 RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
-                Center = new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2),
-                Fill = new SolidColorBrush(szinek[gyongy.Ertek % szinek.Length])
+                Center = Pont(gyongy),
+                Fill = new SolidColorBrush(szinek[gyongy.Ertek])
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
             ter.Children.Add(gyongy3d);
         }
     }
-
-    private void KeszitAkvarium(double x, double y, double z)
-    {
-        SolidColorBrush viz = new(Colors.LightBlue)
-        {
-            Opacity = 0.4
-        };
-        BoxVisual3D teglaTest = new()
-        {
-            Length = x,
-            Width = y,
-            Height = z,
-            Center = new Point3D(-Math.Ceiling(x / 2.0 - 2), Math.Ceiling(y / 2.0 - 2), -Math.Ceiling(z / 2.0 - 2)),
-            Fill = viz
-        };
-        ter.Children.Add(teglaTest);
-
-        RajzolVonal([x, y, z], [x, y, 0]);
-        RajzolVonal([x, y, z], [x, 0, z]);
-        RajzolVonal([x, y, z], [0, y, z]);
-        RajzolVonal([0, 0, 0], [0, 0, z]);
-        RajzolVonal([0, 0, 0], [0, y, 0]);
-        RajzolVonal([0, 0, 0], [x, 0, 0]);
-
-        RajzolVonal([x, 0, 0], [x, y, 0]);
-        RajzolVonal([x, 0, 0], [x, 0, z]);
-        RajzolVonal([0, y, 0], [0, y, z]);
-        RajzolVonal([0, y, 0], [x, y, 0]);
-        RajzolVonal([0, 0, z], [0, y, z]);
-        RajzolVonal([0, 0, z], [x, 0, z]);
-    }
-
-    private void RajzolVonal(double[] kezdet, double[] veg)
-    {
-        LinesVisual3D vonal3D = new()
-        {
-            Thickness = 1.2,
-            Points = [new Point3D(-(kezdet[0] - 2), kezdet[1] - 2, -(kezdet[2] - 2)), new Point3D(-(veg[0] - 2), veg[1] - 2, -(veg[2] - 2))]
-        };
-        ter.Children.Add(vonal3D);
-    }
-
-    private void LerakTengeralattjaro(double x, double y, double z)
-    {
-        var importer = new ModelImporter();
-        var model = importer.Load("Tengeralatjaro.obj");
-
-        ModelVisual3D modelVisual = new ModelVisual3D
-        {
-            Content = model
-        };
-
-        // Hol legyen a tengeralattjáró
-        Point3D position = new(x / 10.0, y / 10.0 + 0.2, z / 10.0);
-        TranslateTransform3D translation = new(position.X, position.Y, position.Z);
-
-        ScaleTransform3D scale = new(18, 18, 18);
-        RotateTransform3D rotate = new(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90));
-        Transform3DGroup transformGroup = new();
-        transformGroup.Children.Add(rotate);
-        transformGroup.Children.Add(translation);
-        transformGroup.Children.Add(scale);
-
-        modelVisual.Transform = transformGroup;
-        ter.Children.Add(modelVisual);
-    }
-
-    private void BtnBeolvas_Click(object sender, RoutedEventArgs e)
-    {
-        OpenFileDialog openFileDialog = new()
-        {
-            Filter = "Szöveges dokumentumok (*.txt)|*.txt"
-        };
-
-        if (openFileDialog.ShowDialog() is true)
-        {
-            BetoltGyongyok(openFileDialog.FileName);
-
-            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
-            KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
-            ter.Children.Add(new SunLight());
-        }
-    }
-
-    private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
-    {
-        if (Ellenorzes())
-        {
-            BetoltGyongyok(new Random());
-
-            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
-
-            Hosszusag = new Random().Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
-            Szelesseg = new Random().Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
-            Magassag = new Random().Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
-
-            KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
-
-            ter.Children.Add(new SunLight());
-        }
-    }
-
-    private bool Ellenorzes()
-    {
-        if (
-                IntCheck(txtTerHosszusagMin) && IntCheck(txtTerHosszusagMax) &&
-                IntCheck(txtTerSzelessegMin) && IntCheck(txtTerSzelessegMax) &&
-                IntCheck(txtTerMagassagMin) && IntCheck(txtTerMagassagMax) &&
-                IntCheck(txtGyongyokSzamaMin) && IntCheck(txtGyongyokSzamaMax)
-           ){}
-        else
-        {
-            MessageBox.Show("Érték csak egész szám lehet.");
-            return false;
-        }
-
-        if (
-                MinMaxCheck(txtTerHosszusagMin, txtTerHosszusagMax) &&
-                MinMaxCheck(txtTerSzelessegMin, txtTerSzelessegMax) &&
-                MinMaxCheck(txtTerMagassagMin, txtTerMagassagMax) &&
-                MinMaxCheck(txtGyongyokSzamaMin, txtGyongyokSzamaMax)
-           ){}
-        else
-        {
-            MessageBox.Show("A minimum érték nem lehet nagyobb a maximumnál.");
-            return false;
-        }
-
-        return true;
-    }
-
-    private bool IntCheck(TextBox szoveg)
-    {
-        int szam;
-        bool alakithato = int.TryParse(szoveg.Text, out szam);
-
-        if (alakithato)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private bool MinMaxCheck(TextBox min, TextBox max)
-    {
-        if (Convert.ToInt32(min.Text) <= Convert.ToInt32(max.Text))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private void BtnLerakas_Click(object sender, RoutedEventArgs e)
-    {
-        if (TbX.Text != "" && TbY.Text != "" && TbZ.Text != "")
-        {
-            HajoX = Convert.ToDouble(TbX.Text);
-            HajoY = Convert.ToDouble(TbY.Text);
-            HajoZ = Convert.ToDouble(TbZ.Text);
-
-            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
-            KeszitAkvarium(2 - (Hosszusag + 4), 2 * Szelesseg + 4, -(2 * Magassag + 4));
-
-            ter.Children.Add(new SunLight());
-        }
-        else
-        {
-            MessageBox.Show("Adjon meg koordinátákat!");
-        }
-
-
-    }
-
     private void RobotAI()
     {
         Robot robot = new(Convert.ToDouble(txtUthossz.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag.ToString());
@@ -313,27 +136,26 @@ public partial class MainWindow : Window
 
     }
 
-    private void Inditas_Click(object sender, RoutedEventArgs e)
+    private bool Ellenorzes()
     {
-        if (ter.Children.Count() < 3)
-        {
-            MessageBox.Show("Töltsön be pályát!");
+        if(
+            !MinMaxCheck(txtTerHosszusagMin, txtTerHosszusagMax) ||
+            !MinMaxCheck(txtTerSzelessegMin, txtTerSzelessegMax) ||
+            !MinMaxCheck(txtTerMagassagMin, txtTerMagassagMax) ||
+            !MinMaxCheck(txtGyongyokSzamaMin, txtGyongyokSzamaMax)
+        ){
+            MessageBox.Show("A minimum érték nem lehet nagyobb a maximumnál.");
+            return false;
         }
-        else
-        {
-            Cursor = Cursors.Wait;
 
-            RobotAI();
-
-            Cursor = Cursors.Arrow;
-
-            foreach (Gyongy gyongy in lbGyongyok.Items)
-                (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
-
-            Osszekotes();
-        }
+        return true;
     }
+    private bool MinMaxCheck(TextBox min, TextBox max) => Convert.ToInt32(min.Text) <= Convert.ToInt32(max.Text);
 
+    private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) => e.Handled = new Regex(@"[^0-9.]+").IsMatch(e.Text);
+    #endregion
+
+    #region __UI Elemek__
     private void Osszekotes()
     {
         Gyongy kezdet, veg;
@@ -372,14 +194,69 @@ public partial class MainWindow : Window
         ter.Children.Add(elsoVonal);
         ter.Children.Add(utolsoVonal);
     }
-
-    private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void KeszitAkvarium(double x, double y, double z)
     {
-        camera.Position = Pont((Gyongy)lbGyongyok.SelectedItem, 5, 5, 5);
-        camera.LookDirection = new Vector3D(-0.9, -0.9, -0.9);
-        camera.UpDirection = new Vector3D(0, 0, 1);
-    }
+        SolidColorBrush viz = new(Colors.LightBlue)
+        {
+            Opacity = 0.4
+        };
+        BoxVisual3D teglaTest = new()
+        {
+            Length = x,
+            Width = y,
+            Height = z,
+            Center = new Point3D(-Math.Ceiling(x / 2.0 - 2), Math.Ceiling(y / 2.0 - 2), -Math.Ceiling(z / 2.0 - 2)),
+            Fill = viz
+        };
+        ter.Children.Add(teglaTest);
 
+        RajzolVonal([x, y, z], [x, y, 0]);
+        RajzolVonal([x, y, z], [x, 0, z]);
+        RajzolVonal([x, y, z], [0, y, z]);
+        RajzolVonal([0, 0, 0], [0, 0, z]);
+        RajzolVonal([0, 0, 0], [0, y, 0]);
+        RajzolVonal([0, 0, 0], [x, 0, 0]);
+
+        RajzolVonal([x, 0, 0], [x, y, 0]);
+        RajzolVonal([x, 0, 0], [x, 0, z]);
+        RajzolVonal([0, y, 0], [0, y, z]);
+        RajzolVonal([0, y, 0], [x, y, 0]);
+        RajzolVonal([0, 0, z], [0, y, z]);
+        RajzolVonal([0, 0, z], [x, 0, z]);
+    }
+    private void RajzolVonal(double[] kezdet, double[] veg)
+    {
+        LinesVisual3D vonal3D = new()
+        {
+            Thickness = 1.2,
+            Points = [new Point3D(-(kezdet[0] - 2), kezdet[1] - 2, -(kezdet[2] - 2)), new Point3D(-(veg[0] - 2), veg[1] - 2, -(veg[2] - 2))]
+        };
+        ter.Children.Add(vonal3D);
+    }
+    private void LerakTengeralattjaro(double x, double y, double z)
+    {
+        var importer = new ModelImporter();
+        var model = importer.Load("Tengeralatjaro.obj");
+
+        ModelVisual3D modelVisual = new ModelVisual3D
+        {
+            Content = model
+        };
+
+        // Hol legyen a tengeralattjáró
+        Point3D position = new(x / 10.0, y / 10.0 + 0.2, z / 10.0);
+        TranslateTransform3D translation = new(position.X, position.Y, position.Z);
+
+        ScaleTransform3D scale = new(18, 18, 18);
+        RotateTransform3D rotate = new(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90));
+        Transform3DGroup transformGroup = new();
+        transformGroup.Children.Add(rotate);
+        transformGroup.Children.Add(translation);
+        transformGroup.Children.Add(scale);
+
+        modelVisual.Transform = transformGroup;
+        ter.Children.Add(modelVisual);
+    }
     private void TengeralattjaroMozgat(float X1, float Y1, float Z1, float X2, float Y2, float Z2)
     {
         var importer = new ModelImporter();
@@ -436,7 +313,69 @@ public partial class MainWindow : Window
         translation.BeginAnimation(TranslateTransform3D.OffsetYProperty, animationY);
         translation.BeginAnimation(TranslateTransform3D.OffsetZProperty, animationZ);
     }
+    #endregion
 
+    #region __Click/DoubleClick__
+    private void BtnBeolvas_Click(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog openFileDialog = new()
+        {
+            Filter = "Szöveges dokumentumok (*.txt)|*.txt"
+        };
+
+        if (openFileDialog.ShowDialog() is true)
+        {
+            BetoltGyongyok(openFileDialog.FileName);
+
+            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+            KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
+            ter.Children.Add(new SunLight());
+        }
+    }
+    private void BtnLerakas_Click(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(TbX.Text) && string.IsNullOrWhiteSpace(TbY.Text) && string.IsNullOrWhiteSpace(TbZ.Text))
+        {
+            HajoX = Convert.ToDouble(TbX.Text);
+            HajoY = Convert.ToDouble(TbY.Text);
+            HajoZ = Convert.ToDouble(TbZ.Text);
+
+            LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+            KeszitAkvarium(2 - (Hosszusag + 4), 2 * Szelesseg + 4, -(2 * Magassag + 4));
+
+            ter.Children.Add(new SunLight());
+        }
+        else
+        {
+            MessageBox.Show("Adjon meg koordinátákat!");
+        }
+    }
+    private void Inditas_Click(object sender, RoutedEventArgs e)
+    {
+        if (ter.Children.Count() < 3)
+        {
+            MessageBox.Show("Töltsön be pályát!");
+        }
+        else
+        {
+            Cursor = Cursors.Wait;
+
+            RobotAI();
+
+            Cursor = Cursors.Arrow;
+
+            foreach (Gyongy gyongy in lbGyongyok.Items)
+                (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
+
+            Osszekotes();
+        }
+    }
+    private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        camera.Position = Pont((Gyongy)lbGyongyok.SelectedItem, 5, 5, 5);
+        camera.LookDirection = new Vector3D(-0.9, -0.9, -0.9);
+        camera.UpDirection = new Vector3D(0, 0, 1);
+    }
     private void animation_Click(object sender, RoutedEventArgs e)
     {
 
@@ -448,6 +387,18 @@ public partial class MainWindow : Window
 
 
     }
+    private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
+    {
+        if(!Ellenorzes())
+            return;
+
+
+        BetoltGyongyok();
+
+        LerakTengeralattjaro(HajoX, HajoY, HajoZ);
+        KeszitAkvarium(2 * Hosszusag + 4, 2 * Szelesseg + 4, 2 * Magassag + 4);
+        ter.Children.Add(new SunLight());
+    }
+    #endregion
 
 }
-
