@@ -64,6 +64,9 @@ public partial class MainWindow : Window
     }
     private void BetoltGyongyok(string path)
     {
+        Hosszusag = 0;
+        Szelesseg = 0;
+        Magassag = 0;
         ter.Children.Clear();
 
         Betolt(path);
@@ -76,9 +79,9 @@ public partial class MainWindow : Window
 
             EllipsoidVisual3D gyongy3d = new()
             {
-                RadiusX = .05 * (gyongy.Ertek + 1) + 1,
-                RadiusY = .05 * (gyongy.Ertek + 1) + 1,
-                RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
+                RadiusX = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
                 Fill = new SolidColorBrush(szinek[gyongy.Ertek])
             };
@@ -104,9 +107,9 @@ public partial class MainWindow : Window
         {
             EllipsoidVisual3D gyongy3d = new()
             {
-                RadiusX = Math.Log10(gyongy.Ertek + 1) * 1.2,
-                RadiusY = Math.Log10(gyongy.Ertek + 1) * 1.2,
-                RadiusZ = Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusX = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
                 Fill = new SolidColorBrush(szinek[gyongy.Ertek])
             };
@@ -200,9 +203,9 @@ public partial class MainWindow : Window
 
             EllipsoidVisual3D gyongy3d = new()
             {
-                RadiusX = .05 * (gyongy.Ertek + 1) + 1,
-                RadiusY = .05 * (gyongy.Ertek + 1) + 1,
-                RadiusZ = .05 * (gyongy.Ertek + 1) + 1,
+                RadiusX = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
+                RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2),
                 Fill = new SolidColorBrush(szinek[gyongy.Ertek % szinek.Length])
             };
@@ -311,8 +314,18 @@ public partial class MainWindow : Window
                 (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
 
             Osszekotes();
+            EredmenyKiiras();
         }
     }
+    private void EredmenyKiiras() {
+        int sum = 0;
+        foreach (Gyongy gyongy in lbGyongyok.Items)
+            sum += gyongy.Ertek;
+        
+        lblDarab.Content = $"Darabszám: {lbGyongyok.Items.Count}";
+        lblOsszeg.Content = $"Összeg: {sum}";
+    }
+
     private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         camera.Position = Pont((Gyongy)lbGyongyok.SelectedItem, 5, 5, 5);
