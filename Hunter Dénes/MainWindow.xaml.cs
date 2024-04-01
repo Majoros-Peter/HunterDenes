@@ -282,16 +282,11 @@ public partial class MainWindow : Window
     }
     private void BtnLerakas_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(TbX.Text) && string.IsNullOrWhiteSpace(TbY.Text) && string.IsNullOrWhiteSpace(TbZ.Text))
+        if (!string.IsNullOrWhiteSpace(TbX.Text) && !string.IsNullOrWhiteSpace(TbY.Text) && !string.IsNullOrWhiteSpace(TbZ.Text))
         {
-            HajoX = Convert.ToDouble(TbX.Text);
-            HajoY = Convert.ToDouble(TbY.Text);
-            HajoZ = Convert.ToDouble(TbZ.Text);
-
-            LerakTengeralattjaro();
-            KeszitAkvarium(2 - (Hosszusag + 4), 2 * Szelesseg + 4, -(2 * Magassag + 4));
-
-            ter.Children.Add(new SunLight());
+            camera.Position = new Point3D(double.Parse(TbX.Text), double.Parse(TbY.Text), double.Parse(TbZ.Text));
+            camera.LookDirection = new Vector3D(-0.9, -0.9, -0.9);
+            camera.UpDirection = new Vector3D(0, 0, 1);
         }
         else
         {
