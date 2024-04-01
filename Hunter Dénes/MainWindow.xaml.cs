@@ -278,7 +278,7 @@ public partial class MainWindow : Window
         {
             lblDarab.Content = "Darabszám: 0";
             lblOsszeg.Content = "Összeg: 0";
-            lbGyongyok.Items.Clear();
+            lbGyongyok.ItemsSource = new List<Gyongy>();
 
             BetoltGyongyok(openFileDialog.FileName);
 
@@ -337,7 +337,7 @@ public partial class MainWindow : Window
     {
         lblDarab.Content = "Darabszám: 0";
         lblOsszeg.Content = "Összeg: 0";
-        lbGyongyok.Items.Clear();
+        lbGyongyok.ItemsSource = new List<Gyongy>();
 
         Random rand = new();
 
