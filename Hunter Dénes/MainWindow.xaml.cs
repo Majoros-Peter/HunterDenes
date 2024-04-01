@@ -120,7 +120,7 @@ public partial class MainWindow : Window
     }
     private void RobotAI()
     {
-        Robot robot = new(Convert.ToDouble(txtSebesseg.Text)* Convert.ToDouble(txtIdo.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag.ToString());
+        Robot robot = new(Convert.ToDouble(txtSebesseg.Text) * Convert.ToDouble(txtIdo.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag);
 
         if (stopper.IsChecked is false)
         {
@@ -276,6 +276,10 @@ public partial class MainWindow : Window
 
         if (openFileDialog.ShowDialog() is true)
         {
+            lblDarab.Content = "Darabszám: 0";
+            lblOsszeg.Content = "Összeg: 0";
+            lbGyongyok.Items.Clear();
+
             BetoltGyongyok(openFileDialog.FileName);
 
             LerakTengeralattjaro();
@@ -301,21 +305,18 @@ public partial class MainWindow : Window
         if (ter.Children.Count() < 3)
         {
             MessageBox.Show("Töltsön be pályát!");
+            return;
         }
-        else
-        {
-            Cursor = Cursors.Wait;
 
-            RobotAI();
+        Cursor = Cursors.Wait;
+        RobotAI();
+        Cursor = Cursors.Arrow;
 
-            Cursor = Cursors.Arrow;
+        foreach (Gyongy gyongy in lbGyongyok.Items)
+            (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
 
-            foreach (Gyongy gyongy in lbGyongyok.Items)
-                (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
-
-            Osszekotes();
-            EredmenyKiiras();
-        }
+        Osszekotes();
+        EredmenyKiiras();
     }
     private void EredmenyKiiras() {
         int sum = 0;
@@ -334,6 +335,10 @@ public partial class MainWindow : Window
     }
     private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
     {
+        lblDarab.Content = "Darabszám: 0";
+        lblOsszeg.Content = "Összeg: 0";
+        lbGyongyok.Items.Clear();
+
         Random rand = new();
 
         if(!Ellenorzes())

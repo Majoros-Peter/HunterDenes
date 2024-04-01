@@ -14,8 +14,8 @@
             <EventSetter Event="PreviewTextInput" Handler="TextBox_PreviewTextInput"/>
         </Style>
     </Window.Resources>
-    
-        <Border BorderBrush="LightGray" BorderThickness="0 1 0 0">
+
+    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0">
         <Grid>
             <Grid.Background>
                 <ImageBrush ImageSource="/ocean.jpg"/>
@@ -32,7 +32,7 @@
                 </h:HelixViewport3D.Camera>
                 <h:SunLight/>
             </h:HelixViewport3D>
-        
+
             <!--#region __Kezelő panel__-->
             <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0 0 1 0" Padding="5">
                 <Border.Background>
@@ -74,29 +74,29 @@
 
                     <Label Content="Algoritmusok:"/>
                     <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
-                        <ComboBoxItem IsSelected="True" Content="Lassabb, de biztosabb útvonal" Tag="Chad"/>
-                        <ComboBoxItem Content="Gyors, megbízhatatlan (mohó) útvonal" Tag="Griddy"/>
+                        <ComboBoxItem IsSelected="True" Content="Lassabb, de biztosabb" Tag="Atlagos"/>
+                        <ComboBoxItem Content="Gyors, kevésbé megbízható" Tag="Greedy"/>
                     </ComboBox>
-                    
-                    
+
+
                     <StackPanel Orientation="Horizontal">
-                        <Label x:Name="lblDarab" Content="Darabszám: " VerticalContentAlignment="center"/>
-                        <Label x:Name="lblOsszeg" Content="Összeg: " VerticalContentAlignment="center"/>
+                        <Label x:Name="lblDarab" Content="Darabszám: 0" VerticalContentAlignment="center"/>
+                        <Label x:Name="lblOsszeg" Content="Összeg: 0" VerticalContentAlignment="center"/>
                     </StackPanel>
 
                 </StackPanel>
             </Border>
             <!--#endregion-->
-            
+
             <!--#region __Random generálás__-->
             <Border Grid.Column="2" BorderBrush="LightGray" BorderThickness="1 0 0 0">
                 <Border.Background>
                     <SolidColorBrush Color="#e8f1f2" Opacity="1"/>
                 </Border.Background>
-            
+
                 <StackPanel>
                     <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Random generálás"/>
-                    
+
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
@@ -106,7 +106,7 @@
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
-                    
+
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
@@ -143,13 +143,11 @@
                         <Slider x:Name="slGyongyErtekek" Width="150" Minimum="1" Maximum="9" Value="9" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
                         <Label FontSize="14" Content="9"/>
                     </StackPanel>
-                    
+
                     <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Margin="5 10 5 5" FontSize="18" Height="40" Content="Generálás"/>
                 </StackPanel>
             </Border>
             <!--#endregion-->
         </Grid>
     </Border>
-</Window>
-
 </Window>

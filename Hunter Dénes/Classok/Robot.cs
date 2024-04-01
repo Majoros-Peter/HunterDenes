@@ -13,15 +13,15 @@ public class Robot
     public double Y { get; private set; } = 0;
     public double Z { get; private set; } = 0;
 
-    public Robot(double uthossz, Gyongy kezdopont, string algoritmusIndex)
+    public Robot(double uthossz, Gyongy kezdopont, object algoritmusIndex)
     {
         UTHOSSZ = uthossz;
         ORIGO = kezdopont;
 
-        Algoritmus = algoritmusIndex switch
+        Algoritmus = algoritmusIndex.ToString() switch
         {
-            "Chad" => AtlagosAlgoritmus,
-            "Griddy" => Greedy,
+            "Atlagos" => AtlagosAlgoritmus,
+            "Greedy" => Greedy,
             _ => DFS
         };
     }
