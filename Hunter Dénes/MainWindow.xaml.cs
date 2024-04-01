@@ -117,7 +117,7 @@ public partial class MainWindow : Window
     }
     private void RobotAI()
     {
-        Robot robot = new(Convert.ToDouble(txtUthossz.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag.ToString());
+        Robot robot = new(Convert.ToDouble(txtSebesseg.Text)* Convert.ToDouble(txtIdo.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag.ToString());
 
         if (stopper.IsChecked is false)
         {
