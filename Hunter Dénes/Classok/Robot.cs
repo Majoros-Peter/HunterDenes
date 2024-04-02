@@ -21,12 +21,16 @@ public class Robot
                                   .Select(G => G.Ertek)
                                   .Where(G => G != 0)
                                   .ToArray();
-        IList<Gyongy>[] utak = new IList<Gyongy>[ertekek.Length];
+        IList<Gyongy> optimalis = [ORIGO];
 
-        for(byte i = 0; i < ertekek.Length; i++)
-            utak[i] = LegjobbAlgo(ORIGO, szukitett.Where(G => G.Ertek >= ertekek[i]));
+        foreach (byte ertek in ertekek)
+        {
+            IList<Gyongy> gyongyok = LegjobbAlgo(ORIGO, szukitett.Where(G => G.Ertek >= ertek));
+            if(gyongyok.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
+                optimalis = gyongyok;
+        }
 
-        return utak.MaxBy(G => G.Sum(G => G.Ertek));
+        return optimalis;
     }
 
     private static IList<Gyongy> LegjobbAlgo(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt=0)
