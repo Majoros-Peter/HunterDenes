@@ -9,9 +9,13 @@
         Icon="/submarine.png"
         Title="Búvárrobot" Height="700" Width="1400">
     <Window.Resources>
-        <Style TargetType="TextBox" x:Key="szam">
+        <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
             <EventSetter Event="PreviewTextInput" Handler="TextBox_PreviewTextInput"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
 
@@ -28,7 +32,7 @@
 
             <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1" Grid.ColumnSpan="1">
                 <h:HelixViewport3D.Camera>
-                    <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="50, 50, 50" LookDirection="-0.9, -0.9, -0.8" UpDirection="1, 1, 1"/>
+                    <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="-3.3, 136, 36.7" LookDirection="-0.5, -1.2, -0.5" UpDirection="-0.2, -0.4, 0.9"/>
                 </h:HelixViewport3D.Camera>
                 <h:SunLight/>
             </h:HelixViewport3D>
@@ -47,11 +51,11 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="X"/>
-                        <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px" Text="50" Style="{StaticResource szam}"/>
+                        <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px" Text="50"/>
                         <Label Content="Y"/>
-                        <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px" Text="50" Style="{StaticResource szam}"/>
+                        <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px" Text="50"/>
                         <Label Content="Z"/>
-                        <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px" Text="50" Style="{StaticResource szam}"/>
+                        <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px" Text="50"/>
                     </StackPanel>
 
                     <Button x:Name="BtnLerakas" Height="50" Margin="0 10 0 0" Click="BtnLerakas_Click" Content="Kamera lerakása"/>
@@ -68,14 +72,14 @@
                         <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
                     </StackPanel>
 
-                    <Button Content="Út keresése" Click="Inditas_Click"/>
-
-                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick"/>
+                    <Button Content="Út keresése" Click="Inditas_Click" Height="30"/>
 
                     <Label Content="Algoritmusok:"/>
                     <ComboBox HorizontalContentAlignment="Center" x:Name="cbAlgoritmusok">
-                        <ComboBoxItem IsSelected="True" Content="Lassabb, de biztosabb" Tag="Atlagos"/>
-                        <ComboBoxItem Content="Gyors, kevésbé megbízható" Tag="Greedy"/>
+                        <ComboBoxItem IsSelected="True" Content="Leglassabb és egyben legpontosabb" Tag="Atlagos"/>
+                        <ComboBoxItem Content="Gyors, de nem a legpontosabb" Tag="Hybrid"/>
+                        <ComboBoxItem Content="Gyorsabb, és pontatlanabb" Tag="Greedy"/>
+                        <ComboBoxItem Content="Leggyorsabb, és legpontatlanabb" Tag="Gyorsitott"/>
                     </ComboBox>
 
 
@@ -84,6 +88,7 @@
                         <Label x:Name="lblOsszeg" Content="Összeg: 0" VerticalContentAlignment="center"/>
                     </StackPanel>
 
+                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px"/>
                 </StackPanel>
             </Border>
             <!--#endregion-->
@@ -100,9 +105,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerHosszusagMin" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtTerHosszusagMin" Text="2"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerHosszusagMax" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtTerHosszusagMax" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -110,9 +115,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerSzelessegMin" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtTerSzelessegMin" Text="2"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerSzelessegMax" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtTerSzelessegMax" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -120,9 +125,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér magassága:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerMagassagMin" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtTerMagassagMin" Text="2"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerMagassagMax" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtTerMagassagMax" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -130,9 +135,9 @@
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Gyöngyök száma:"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtGyongyokSzamaMin" Style="{StaticResource szam}" Text="1"/>
+                        <TextBox x:Name="txtGyongyokSzamaMin" Text="1"/>
                         <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtGyongyokSzamaMax" Style="{StaticResource szam}" Text="2"/>
+                        <TextBox x:Name="txtGyongyokSzamaMax" Text="2"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
