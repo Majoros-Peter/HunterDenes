@@ -120,7 +120,7 @@ public partial class MainWindow : Window
     }
     private void RobotAI()
     {
-        Robot robot = new(Convert.ToDouble(txtSebesseg.Text) * Convert.ToDouble(txtIdo.Text), gyongyok[0], (cbAlgoritmusok.SelectedValue as ComboBoxItem).Tag);
+        Robot robot = new(Convert.ToDouble(txtSebesseg.Text) * Convert.ToDouble(txtIdo.Text), gyongyok[0]);
 
         if (stopper.IsChecked is false)
         {
@@ -276,8 +276,8 @@ public partial class MainWindow : Window
 
         if (openFileDialog.ShowDialog() is true)
         {
-            lblDarab.Content = "Darabszám: 0";
-            lblOsszeg.Content = "Összeg: 0";
+            lblDarab.Content = "Darabszám : 0";
+            lblOsszeg.Content = "Összeg : 0";
             lbGyongyok.ItemsSource = new List<Gyongy>();
 
             BetoltGyongyok(openFileDialog.FileName);
@@ -323,8 +323,8 @@ public partial class MainWindow : Window
         foreach (Gyongy gyongy in lbGyongyok.Items)
             sum += gyongy.Ertek;
         
-        lblDarab.Content = $"Darabszám: {lbGyongyok.Items.Count}";
-        lblOsszeg.Content = $"Összeg: {sum}";
+        lblDarab.Content = $"Darabszám : {lbGyongyok.Items.Count}";
+        lblOsszeg.Content = $"Összeg : {sum}";
     }
 
     private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -335,8 +335,8 @@ public partial class MainWindow : Window
     }
     private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
     {
-        lblDarab.Content = "Darabszám: 0";
-        lblOsszeg.Content = "Összeg: 0";
+        lblDarab.Content = "Darabszám : 0";
+        lblOsszeg.Content = "Összeg : 0";
         lbGyongyok.ItemsSource = new List<Gyongy>();
 
         Random rand = new();
