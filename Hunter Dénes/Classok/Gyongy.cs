@@ -67,15 +67,13 @@ public struct Gyongy
 
         for (int id = 1; id < fileHossz; id++)
         {
-            Generalas:
-
             Gyongy gyongy = new([x(), y(), z(), ertek()], id);
 
             for(int i = 0; i < id; i++)
             {
                 if(gyongy.X == gyongyok[i].X && gyongy.Y == gyongyok[i].Y && gyongy.Z == gyongyok[i].Z)
                 {
-                   goto Generalas;
+                    continue;
                 }
             }
 
