@@ -37,136 +37,137 @@
     </Window.Resources>
 
     <Border>
-        <Border.Background>
-            <ImageBrush ImageSource="/ocean.jpg" Opacity=".9"/>
-        </Border.Background>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200px"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="200px"/>
-            </Grid.ColumnDefinitions>
+    <Border.Background>
+        <ImageBrush ImageSource="/ocean.jpg" Opacity=".9"/>
+    </Border.Background>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200px"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="200px"/>
+        </Grid.ColumnDefinitions>
 
-            <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1" Grid.ColumnSpan="1" CameraMode="WalkAround">
-                <h:HelixViewport3D.Camera>
-                    <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="-3.3, 136, 36.7" LookDirection="-0.5, -1.2, -0.5" UpDirection="-0.2, -0.4, 0.9"/>
-                </h:HelixViewport3D.Camera>
-                <h:SunLight/>
-            </h:HelixViewport3D>
+        <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1" Grid.ColumnSpan="1" CameraMode="WalkAround">
+            <h:HelixViewport3D.Camera>
+                <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="-3.3, 136, 36.7" LookDirection="-0.5, -1.2, -0.5" UpDirection="-0.2, -0.4, 0.9"/>
+            </h:HelixViewport3D.Camera>
+            <h:SunLight/>
+        </h:HelixViewport3D>
 
-            <!--#region __Kezelő panel__-->
-            <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0 0 1 0" Padding="5">
-                <Border.Background>
-                    <SolidColorBrush Color="#e8f1f2" Opacity=".8"/>
-                </Border.Background>
-                <StackPanel>
-                    <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Kezelő panel"/>
+        <!--#region __Kezelő panel__-->
+        <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0 0 1 0" Padding="5">
+            <Border.Background>
+                <SolidColorBrush Color="#e8f1f2" Opacity=".8"/>
+            </Border.Background>
+            <StackPanel>
+                <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Kezelő panel"/>
 
-                    <Button x:Name="BtnBeolvas" Click="BtnBeolvas_Click" Content="Gyöngyök beolvasása"/>
+                <Button x:Name="BtnBeolvas" Click="BtnBeolvas_Click" Content="Gyöngyök beolvasása"/>
 
-                    <Label Content="Kamera kordinátái:"/>
+                <Label Content="Kamera kordinátái:"/>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="X :"/>
-                        <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px" Text="50"/>
-                        <Label Content="Y :"/>
-                        <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px" Text="50"/>
-                        <Label Content="Z :"/>
-                        <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px" Text="50"/>
-                    </StackPanel>
-
-                    <Button x:Name="BtnLerakas" Click="BtnLerakas_Click" Content="Kamera lerakása"/>
-
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Sebesség :"/>
-                        <TextBox x:Name="txtSebesseg" Padding="1,0,2,0" VerticalAlignment="Center" Text="30"/>
-                        <Label Content="m/s" Padding="0,0,10,0" VerticalContentAlignment="Center"/>
-
-                        <Label Content="Idő :"/>
-                        <TextBox x:Name="txtIdo" Padding="1,0,2,0" VerticalAlignment="Center" Text="3"/>
-                        <Label Content="sec" Padding="0" VerticalContentAlignment="Center"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Stopper" VerticalContentAlignment="center"/>
-                        <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
-                    </StackPanel>
-
-                    <Button Content="Út keresése" Click="Inditas_Click"/>
-                    <Button x:Name="BtnAnimacio" Click="BtnAnimacio_Click" Content="Animáció indítása"/>
-
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="lblDarab" Content="Darabszám : 0" VerticalContentAlignment="center"/>
-                        <Label x:Name="lblOsszeg" Content="Összeg : 0" VerticalContentAlignment="center"/>
-                    </StackPanel>
-
-                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="300"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="X :"/>
+                    <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px" Text="50"/>
+                    <Label Content="Y :"/>
+                    <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px" Text="50"/>
+                    <Label Content="Z :"/>
+                    <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px" Text="50"/>
                 </StackPanel>
-            </Border>
-            <!--#endregion-->
 
-            <!--#region __Random generálás__-->
-            <Border Grid.Column="2" BorderBrush="LightGray" BorderThickness="1 0 0 0">
-                <Border.Background>
-                    <SolidColorBrush Color="#e8f1f2" Opacity=".8"/>
-                </Border.Background>
+                <Button x:Name="BtnLerakas" Click="BtnLerakas_Click" Content="Kamera lerakása"/>
 
-                <StackPanel>
-                    <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Random generálás"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Sebesség :"/>
+                    <TextBox x:Name="txtSebesseg" Padding="1,0,2,0" VerticalAlignment="Center" Text="30"/>
+                    <Label Content="m/s" Padding="0,0,10,0" VerticalContentAlignment="Center"/>
 
-                    <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
-                    <xctk:RangeSlider x:Name="slHosszusag"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="{Binding ElementName=slHosszusag, Path=LowerValue}" Margin="0, 0, 30, 0"/>
-                        <Label Content="{Binding ElementName=slHosszusag, Path=HigherValue}" Margin="30, 0, 0, 0"/>
-                    </StackPanel>
-
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
-
-                    <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
-                    <xctk:RangeSlider x:Name="slSzelesseg"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="{Binding ElementName=slSzelesseg, Path=LowerValue}" Margin="0, 0, 30, 0"/>
-                        <Label Content="{Binding ElementName=slSzelesseg, Path=HigherValue}" Margin="30, 0, 0, 0"/>
-                    </StackPanel>
-
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
-
-                    <Label FontSize="18" HorizontalAlignment="Center" Content="Tér magassága:"/>
-                    <xctk:RangeSlider x:Name="slMagassag"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="{Binding ElementName=slMagassag, Path=LowerValue}" Margin="0, 0, 30, 0"/>
-                        <Label Content="{Binding ElementName=slMagassag, Path=HigherValue}" Margin="30, 0, 0, 0"/>
-                    </StackPanel>
-
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
-
-                    <Label FontSize="18" HorizontalAlignment="Center" Content="Gyöngyök száma:"/>
-                    <xctk:RangeSlider x:Name="slGyongyokSzama"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="{Binding ElementName=slGyongyokSzama, Path=LowerValue}" Margin="0, 0, 30, 0"/>
-                        <Label Content="{Binding ElementName=slGyongyokSzama, Path=HigherValue}" Margin="30, 0, 0, 0"/>
-                    </StackPanel>
-
-                    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
-
-                    <TextBlock FontSize="18" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="10" Text="Gyöngyök értékének terjedelme:"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Label FontSize="14" Content="1"/>
-                        <Slider x:Name="slGyongyErtekek" Width="150" Minimum="1" Maximum="50" Value="50" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
-                        <Label FontSize="14" Content="50"/>
-                    </StackPanel>
-
-                    <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Content="Generálás"/>
+                    <Label Content="Idő :"/>
+                    <TextBox x:Name="txtIdo" Padding="1,0,2,0" VerticalAlignment="Center" Text="3"/>
+                    <Label Content="sec" Padding="0" VerticalContentAlignment="Center"/>
                 </StackPanel>
-                    <Label x:Name="lblZene">Zene:</Label>
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button Click="btnMusicBack_Click" x:Name="btnMusicBack" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="40px" Height="40px" Content="←"></Button>
-                        <Button Click="btnMusicNext_Click" x:Name="btnMusicNext" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="40px" Height="40px" Content="→"></Button>
-                    </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Stopper" VerticalContentAlignment="center"/>
+                    <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
                 </StackPanel>
-            </Border>
-            <!--#endregion-->
-        </Grid>
-    </Border>
+
+                <Button Content="Út keresése" Click="Inditas_Click"/>
+                <Button x:Name="BtnAnimacio" Click="BtnAnimacio_Click" Content="Animáció indítása"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="lblDarab" Content="Darabszám : 0" VerticalContentAlignment="center"/>
+                    <Label x:Name="lblOsszeg" Content="Összeg : 0" VerticalContentAlignment="center"/>
+                </StackPanel>
+
+                <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="300"/>
+
+            
+            </StackPanel>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region __Random generálás__-->
+        <Border Grid.Column="2" BorderBrush="LightGray" BorderThickness="1 0 0 0">
+            <Border.Background>
+                <SolidColorBrush Color="#e8f1f2" Opacity=".8"/>
+            </Border.Background>
+
+            <StackPanel>
+                <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Random generálás"/>
+
+                <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
+                <xctk:RangeSlider x:Name="slHosszusag"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="{Binding ElementName=slHosszusag, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                    <Label Content="{Binding ElementName=slHosszusag, Path=HigherValue}" Margin="30, 0, 0, 0"/>
+                </StackPanel>
+
+                <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
+                <xctk:RangeSlider x:Name="slSzelesseg"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="{Binding ElementName=slSzelesseg, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                    <Label Content="{Binding ElementName=slSzelesseg, Path=HigherValue}" Margin="30, 0, 0, 0"/>
+                </StackPanel>
+
+                <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                <Label FontSize="18" HorizontalAlignment="Center" Content="Tér magassága:"/>
+                <xctk:RangeSlider x:Name="slMagassag"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="{Binding ElementName=slMagassag, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                    <Label Content="{Binding ElementName=slMagassag, Path=HigherValue}" Margin="30, 0, 0, 0"/>
+                </StackPanel>
+
+                <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                <Label FontSize="18" HorizontalAlignment="Center" Content="Gyöngyök száma:"/>
+                <xctk:RangeSlider x:Name="slGyongyokSzama"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="{Binding ElementName=slGyongyokSzama, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                    <Label Content="{Binding ElementName=slGyongyokSzama, Path=HigherValue}" Margin="30, 0, 0, 0"/>
+                </StackPanel>
+
+                <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
+
+                <TextBlock FontSize="18" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="10" Text="Gyöngyök értékének terjedelme:"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Label FontSize="14" Content="1"/>
+                    <Slider x:Name="slGyongyErtekek" Width="150" Minimum="1" Maximum="50" Value="50" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                    <Label FontSize="14" Content="50"/>
+                </StackPanel>
+
+                <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Content="Generálás"/>
+                <Label x:Name="lblZene">Zene:</Label>
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button Click="btnMusicBack_Click" x:Name="btnMusicBack" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="40px" Height="40px" Content="←"></Button>
+                    <Button Click="btnMusicNext_Click" x:Name="btnMusicNext" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="40px" Height="40px" Content="→"></Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <!--#endregion-->
+    </Grid>
+</Border>
 </Window>
