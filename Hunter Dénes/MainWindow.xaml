@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:h="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:Hunter_Dénes"
         mc:Ignorable="d"
         Icon="/submarine.png"
@@ -17,9 +18,25 @@
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
+
+        <Style TargetType="xctk:RangeSlider">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Minimum" Value="1"/>
+            <Setter Property="Maximum" Value="300"/>
+            <Setter Property="LowerValue" Value="90"/>
+            <Setter Property="HigherValue" Value="100"/>
+            <Setter Property="IsSnapToTickEnabled" Value="True"/>
+            <Setter Property="TickFrequency" Value="1"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5, 10, 5, 5"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Height" Value="40"/>
+        </Style>
     </Window.Resources>
 
-    <Border BorderBrush="LightGray" BorderThickness="0 1 0 0">
+    <Border>
         <Border.Background>
             <ImageBrush ImageSource="/ocean.jpg" Opacity=".9"/>
         </Border.Background>
@@ -30,7 +47,7 @@
                 <ColumnDefinition Width="200px"/>
             </Grid.ColumnDefinitions>
 
-            <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1" Grid.ColumnSpan="1">
+            <h:HelixViewport3D ZoomExtentsWhenLoaded="True" x:Name="ter" Grid.Column="1" Grid.ColumnSpan="1" CameraMode="WalkAround">
                 <h:HelixViewport3D.Camera>
                     <PerspectiveCamera x:Name="camera" FieldOfView="95" Position="-3.3, 136, 36.7" LookDirection="-0.5, -1.2, -0.5" UpDirection="-0.2, -0.4, 0.9"/>
                 </h:HelixViewport3D.Camera>
@@ -45,26 +62,26 @@
                 <StackPanel>
                     <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Kezelő panel"/>
 
-                    <Button x:Name="BtnBeolvas" Height="50" Click="BtnBeolvas_Click" Content="Gyöngyök beolvasása"/>
+                    <Button x:Name="BtnBeolvas" Click="BtnBeolvas_Click" Content="Gyöngyök beolvasása"/>
 
                     <Label Content="Kamera kordinátái:"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="X"/>
+                        <Label Content="X :"/>
                         <TextBox x:Name="TbX" MinWidth="26px" MaxWidth="52px" Text="50"/>
-                        <Label Content="Y"/>
+                        <Label Content="Y :"/>
                         <TextBox x:Name="TbY" MinWidth="26px" MaxWidth="52px" Text="50"/>
-                        <Label Content="Z"/>
+                        <Label Content="Z :"/>
                         <TextBox x:Name="TbZ" MinWidth="26px" MaxWidth="52px" Text="50"/>
                     </StackPanel>
 
-                    <Button x:Name="BtnLerakas" Height="50" Margin="0 10 0 0" Click="BtnLerakas_Click" Content="Kamera lerakása"/>
+                    <Button x:Name="BtnLerakas" Click="BtnLerakas_Click" Content="Kamera lerakása"/>
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Sebesség :"/>
                         <TextBox x:Name="txtSebesseg" Padding="1,0,2,0" VerticalAlignment="Center" Text="30"/>
                         <Label Content="m/s" Padding="0,0,10,0" VerticalContentAlignment="Center"/>
-                        
+
                         <Label Content="Idő :"/>
                         <TextBox x:Name="txtIdo" Padding="1,0,2,0" VerticalAlignment="Center" Text="3"/>
                         <Label Content="sec" Padding="0" VerticalContentAlignment="Center"/>
@@ -75,14 +92,15 @@
                         <CheckBox x:Name="stopper" IsChecked="True" IsThreeState="False" VerticalContentAlignment="center"/>
                     </StackPanel>
 
-                    <Button Content="Út keresése" Click="Inditas_Click" Height="30"/>
+                    <Button Content="Út keresése" Click="Inditas_Click"/>
+                    <Button x:Name="BtnAnimacio" Click="BtnAnimacio_Click" Content="Animáció indítása"/>
 
                     <StackPanel Orientation="Horizontal">
                         <Label x:Name="lblDarab" Content="Darabszám : 0" VerticalContentAlignment="center"/>
                         <Label x:Name="lblOsszeg" Content="Összeg : 0" VerticalContentAlignment="center"/>
                     </StackPanel>
 
-                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px"/>
+                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="300"/>
                 </StackPanel>
             </Border>
             <!--#endregion-->
@@ -97,41 +115,37 @@
                     <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Random generálás"/>
 
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér hosszúsága:"/>
+                    <xctk:RangeSlider x:Name="slHosszusag"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerHosszusagMin" Text="1"/>
-                        <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerHosszusagMax" Text="10"/>
+                        <Label Content="{Binding ElementName=slHosszusag, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                        <Label Content="{Binding ElementName=slHosszusag, Path=HigherValue}" Margin="30, 0, 0, 0"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
 
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér szélessége:"/>
+                    <xctk:RangeSlider x:Name="slSzelesseg"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerSzelessegMin" Text="1"/>
-                        <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerSzelessegMax" Text="10"/>
+                        <Label Content="{Binding ElementName=slSzelesseg, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                        <Label Content="{Binding ElementName=slSzelesseg, Path=HigherValue}" Margin="30, 0, 0, 0"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
 
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Tér magassága:"/>
+                    <xctk:RangeSlider x:Name="slMagassag"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtTerMagassagMin" Text="1"/>
-                        <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtTerMagassagMax" Text="10"/>
+                        <Label Content="{Binding ElementName=slMagassag, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                        <Label Content="{Binding ElementName=slMagassag, Path=HigherValue}" Margin="30, 0, 0, 0"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
 
                     <Label FontSize="18" HorizontalAlignment="Center" Content="Gyöngyök száma:"/>
+                    <xctk:RangeSlider x:Name="slGyongyokSzama"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="Minimum:"/>
-                        <TextBox x:Name="txtGyongyokSzamaMin" Text="1"/>
-                        <Label Content="Maximum:"/>
-                        <TextBox x:Name="txtGyongyokSzamaMax" Text="10"/>
+                        <Label Content="{Binding ElementName=slGyongyokSzama, Path=LowerValue}" Margin="0, 0, 30, 0"/>
+                        <Label Content="{Binding ElementName=slGyongyokSzama, Path=HigherValue}" Margin="30, 0, 0, 0"/>
                     </StackPanel>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0" Margin="10 10 10 0"/>
@@ -139,11 +153,11 @@
                     <TextBlock FontSize="18" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="10" Text="Gyöngyök értékének terjedelme:"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <Label FontSize="14" Content="1"/>
-                        <Slider x:Name="slGyongyErtekek" Width="150" Minimum="1" Maximum="50" Value="25" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                        <Slider x:Name="slGyongyErtekek" Width="150" Minimum="1" Maximum="50" Value="50" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
                         <Label FontSize="14" Content="50"/>
                     </StackPanel>
 
-                    <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Margin="5 10 5 5" FontSize="18" Height="40" Content="Generálás"/>
+                    <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Content="Generálás"/>
                 </StackPanel>
             </Border>
             <!--#endregion-->

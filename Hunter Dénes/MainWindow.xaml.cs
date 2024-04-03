@@ -24,21 +24,19 @@ using static Gyongy;
 
 public partial class MainWindow : Window
 {
-    #region __Hajo__
+    #region __Változók__
     private static Color[] szinek;
-
-    public double HajoX { get; set; } = 0;
-    public double HajoY { get; set; } = 0;
-    public double HajoZ { get; set; } = 0;
 
     public double Hosszusag { get; set; } = 5;
     public double Szelesseg { get; set; } = 5;
     public double Magassag { get; set; } = 5;
+
+    Point3D hajoHelye = new(0, 0, 0);
+    private MediaPlayer mediaPlayer = new();
     #endregion
 
     public MainWindow()
     {
-
         InitializeComponent();
         DataContext = this;
 
@@ -58,7 +56,8 @@ public partial class MainWindow : Window
             Color.FromRgb(119, 40, 189),
             Color.FromRgb(174, 52, 201),
             Color.FromRgb(217, 52, 159),
-            Color.FromRgb(255, 249, 61)
+            Color.FromRgb(255, 249, 61),
+            Color.FromRgb(237, 164, 55)
         ];
     }
     private void PlayMusic(string filePath)
@@ -84,6 +83,8 @@ public partial class MainWindow : Window
 
         Betolt(path);
 
+        int oszto = gyongyok.Max(G => G.Ertek) / szinek.Length + 1;
+
         foreach (Gyongy gyongy in gyongyok)
         {
             Hosszusag = Math.Max(gyongy.X, Hosszusag);
@@ -96,7 +97,7 @@ public partial class MainWindow : Window
                 RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
-                Fill = new SolidColorBrush(szinek[(gyongy.Ertek + 1) / (50 / szinek.Length)])
+                Fill = new SolidColorBrush(szinek[gyongy.Ertek / oszto])
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
@@ -111,7 +112,7 @@ public partial class MainWindow : Window
         Func<int> x = () => rand.Next((int)Hosszusag+1);
         Func<int> y = () => rand.Next((int)Szelesseg+1);
         Func<int> z = () => rand.Next((int)Magassag+1);
-        int gyongyokSzama = rand.Next(Convert.ToInt32(txtGyongyokSzamaMin.Text) + 1, Convert.ToInt32(txtGyongyokSzamaMax.Text) + 1);
+        int gyongyokSzama = rand.Next((int)slGyongyokSzama.LowerValue, (int)slGyongyokSzama.HigherValue)+1;
         Func<int> ertek = () => rand.Next((int)slGyongyErtekek.Value)+1;
 
         Betolt(x, y, z, ertek, gyongyokSzama);
@@ -124,7 +125,7 @@ public partial class MainWindow : Window
                 RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
-                Fill = new SolidColorBrush(szinek[(gyongy.Ertek + 1) / (50 / szinek.Length)])
+                Fill = new SolidColorBrush(szinek[gyongy.Ertek / (gyongyok.Max(G => G.Ertek) / szinek.Length+1)])
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
@@ -134,39 +135,26 @@ public partial class MainWindow : Window
     private void RobotAI()
     {
         Robot robot = new(Convert.ToDouble(txtSebesseg.Text) * Convert.ToDouble(txtIdo.Text), gyongyok[0]);
+        IList<Gyongy> koordinatak;
 
         if (stopper.IsChecked is false)
         {
-            lbGyongyok.ItemsSource = robot.AI();
+            koordinatak = robot.AI();
+            lbGyongyok.ItemsSource = koordinatak.Count != 0 ? koordinatak : new List<string>() { "Nincsenek összegyűjthető gyöngyök" };
             return;
         }
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        lbGyongyok.ItemsSource = robot.AI();
+        koordinatak = robot.AI();
+        lbGyongyok.ItemsSource = koordinatak.Count != 0 ? koordinatak : new List<string>() { "Nincsenek összegyűjthető gyöngyök" };
 
         sw.Stop();
         MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
 
     }
 
-    private bool Ellenorzes()
-    {
-        if(
-            !MinMaxCheck(txtTerHosszusagMin, txtTerHosszusagMax) ||
-            !MinMaxCheck(txtTerSzelessegMin, txtTerSzelessegMax) ||
-            !MinMaxCheck(txtTerMagassagMin, txtTerMagassagMax) ||
-            !MinMaxCheck(txtGyongyokSzamaMin, txtGyongyokSzamaMax)
-        ){
-            MessageBox.Show("A minimum érték nem lehet nagyobb a maximumnál.");
-            return false;
-        }
-
-        return true;
-    }
-    private bool MinMaxCheck(TextBox min, TextBox max) => Convert.ToInt32(min.Text) <= Convert.ToInt32(max.Text);
-
-    private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) => e.Handled = new Regex(@"[^0-9.]+").IsMatch(e.Text);
+    private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) => e.Handled = new Regex(@"[^-0-9.]+").IsMatch(e.Text);
     #endregion
 
     #region __UI Elemek__
@@ -325,11 +313,14 @@ public partial class MainWindow : Window
         RobotAI();
         Cursor = Cursors.Arrow;
 
-        foreach (Gyongy gyongy in lbGyongyok.Items)
-            (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
+        if(lbGyongyok.Items.Count > 1)
+        {
+            foreach (Gyongy gyongy in lbGyongyok.Items)
+                (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
 
-        Osszekotes();
-        EredmenyKiiras();
+            Osszekotes();
+            EredmenyKiiras();
+        }
     }
     private void EredmenyKiiras() {
         int sum = 0;
@@ -354,13 +345,9 @@ public partial class MainWindow : Window
 
         Random rand = new();
 
-        if(!Ellenorzes())
-            return;
-
-
-        Hosszusag = rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
-        Szelesseg = rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
-        Magassag = rand.Next(Convert.ToInt32(txtTerHosszusagMin.Text) - 1, Convert.ToInt32(txtTerHosszusagMax.Text));
+        Hosszusag = rand.Next((int)slHosszusag.LowerValue -1, (int)slHosszusag.HigherValue);
+        Szelesseg = rand.Next((int)slHosszusag.LowerValue -1, (int)slHosszusag.HigherValue);
+        Magassag = rand.Next((int)slHosszusag.LowerValue -1, (int)slHosszusag.HigherValue);
 
         BetoltGyongyok();
 
@@ -369,4 +356,86 @@ public partial class MainWindow : Window
         ter.Children.Add(new SunLight());
     }
     #endregion
+
+    private void BtnAnimacio_Click(object sender, RoutedEventArgs e)
+    {
+        if (lbGyongyok.Items.Count == 1)
+            return;
+
+        List<Point3D> coordinateList = new List<Point3D>()
+        {
+        };
+
+        foreach (Gyongy gyongy in lbGyongyok.ItemsSource)
+        {
+            coordinateList.Add(new Point3D(-gyongy.X * 2, gyongy.Y * 2, -gyongy.Z * 2 - 0.7));
+        };
+
+
+        Animacio(coordinateList);
+    }
+
+    private void Animacio(List<Point3D> kordik)
+    {
+        MoveToNextCoordinate(0, kordik);
+    }
+    void MoveToCoordinate(ModelVisual3D jarmu, Point3D coordinate, Action callback)
+    {
+        TranslateTransform3D translateTransform = jarmu.Transform as TranslateTransform3D;
+
+        double tavolsag = CalculateDistance(hajoHelye, coordinate);
+
+        double idoMpBen = tavolsag / Convert.ToInt32(txtSebesseg.Text) * 1.0;
+        // Create translation animations for X, Y, and Z coordinates
+        DoubleAnimation animationX = new DoubleAnimation();
+        animationX.From = hajoHelye.X; // Start from the current X position
+        animationX.To = coordinate.X; // Destination X coordinate
+        animationX.Duration = TimeSpan.FromSeconds(idoMpBen); // Duration of the animation
+
+        DoubleAnimation animationY = new DoubleAnimation();
+        animationY.From = hajoHelye.Y; // Start from the current Y position
+        animationY.To = coordinate.Y; // Destination Y coordinate
+        animationY.Duration = TimeSpan.FromSeconds(idoMpBen); // Duration of the animation
+
+        DoubleAnimation animationZ = new DoubleAnimation();
+        animationZ.From = hajoHelye.Z; // Start from the current Z position
+        animationZ.To = coordinate.Z; // Destination Z coordinate
+        animationZ.Duration = TimeSpan.FromSeconds(idoMpBen); // Duration of the animation
+
+        // Create a new TranslateTransform3D to hold the current translation
+        TranslateTransform3D translation = new TranslateTransform3D();
+        jarmu.Transform = translation;
+
+        // Handle the Completed event of each animation to trigger the next movement
+        animationZ.Completed += (sender, e) =>
+        {
+            hajoHelye = coordinate; // Update the current position
+            callback(); // Trigger the callback function
+        };
+
+        // Start the animations
+        translation.BeginAnimation(TranslateTransform3D.OffsetXProperty, animationX);
+        translation.BeginAnimation(TranslateTransform3D.OffsetYProperty, animationY);
+        translation.BeginAnimation(TranslateTransform3D.OffsetZProperty, animationZ);
+    }
+
+    void MoveToNextCoordinate(int index, List<Point3D> kordik)
+    {
+        ModelVisual3D tengeralattjaro = ter.Children.ToList().Find(G => G.GetName() == "tengeralattjaro") as ModelVisual3D;
+
+        if (index < kordik.Count)
+        {
+            MoveToCoordinate(tengeralattjaro, kordik[index], () =>
+            {
+                MoveToNextCoordinate(index + 1, kordik); // Move to the next coordinate in the list
+            });
+        }
+    }
+
+    public static double CalculateDistance(Point3D point1, Point3D point2)
+    {
+        Vector3D vector = Point3D.Subtract(point2, point1);
+        double distance = vector.Length;
+        return distance;
+    }
 }

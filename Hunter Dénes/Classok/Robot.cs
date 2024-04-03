@@ -21,12 +21,16 @@ public class Robot
                                   .Select(G => G.Ertek)
                                   .Where(G => G != 0)
                                   .ToArray();
-        IList<Gyongy> optimalis = [ORIGO];
+        IList<Gyongy> optimalis = [];
 
         foreach (int ertek in ertekek)
         {
             IList<Gyongy> gyongyok = LegjobbAlgo(ORIGO, szukitett.Where(G => G.Ertek >= ertek));
             if(gyongyok.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
+                optimalis = gyongyok;
+
+            gyongyok = LegjobbAlgo2(ORIGO, szukitett.Where(G => G.Ertek >= ertek));
+            if (gyongyok.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
                 optimalis = gyongyok;
         }
 
@@ -46,6 +50,20 @@ public class Robot
             return [kiindulo];
 
         return [..LegjobbAlgo(gyongy, tovabbSzukitett, megtettUt+ kiindulo.szomszedok[gyongy.Id]), kiindulo];
+    }
+    private static IList<Gyongy> LegjobbAlgo2(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt = 0)
+    {
+        Gyongy gyongy = szukitett.MinBy(G => G.Id != kiindulo.Id ? G.Ertek/kiindulo.szomszedok[G.Id] : 0);
+
+        if (megtettUt + kiindulo.szomszedok[gyongy.Id] + ORIGO.szomszedok[gyongy.Id] > UTHOSSZ)
+            return [kiindulo];
+
+        IEnumerable<Gyongy> tovabbSzukitett = szukitett.Where(G => G.Id != gyongy.Id && megtettUt + kiindulo.szomszedok[G.Id] + ORIGO.szomszedok[G.Id] <= UTHOSSZ);
+
+        if (!tovabbSzukitett.Any())
+            return [kiindulo];
+
+        return [.. LegjobbAlgo2(gyongy, tovabbSzukitett, megtettUt + kiindulo.szomszedok[gyongy.Id]), kiindulo];
     }
 
     #region __Amik túl lassúk (és rosszak) voltak__

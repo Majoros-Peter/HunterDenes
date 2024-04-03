@@ -32,6 +32,26 @@ namespace Hunter_Dénes.Classok
             ApplyMaterials(model, materialsDict);
 
             ModelVisual3D modelVisual = new ModelVisual3D { Content = model };
+
+
+
+            // Create a Transform3DGroup to hold the rotation transformation
+            Transform3DGroup transformGroup = new Transform3DGroup();
+
+            // Create a RotateTransform3D to rotate around the Y-axis
+            RotateTransform3D rotationTransform = new RotateTransform3D();
+            AxisAngleRotation3D axisRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180); // Rotate by -90 degrees around the Y-axis
+            rotationTransform.Rotation = axisRotation;
+
+            // Add the rotation transformation to the Transform3DGroup
+            transformGroup.Children.Add(rotationTransform);
+
+            // Apply the Transform3DGroup to the ModelVisual3D object
+            modelVisual.Transform = transformGroup;
+
+
+
+            modelVisual.SetName("tengeralattjaro");
             viewport.Children.Add(modelVisual);
         }
 
