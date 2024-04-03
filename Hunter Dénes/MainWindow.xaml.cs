@@ -25,8 +25,8 @@ using static Gyongy;
 public partial class MainWindow : Window
 {
     #region __Változók__
-    private static System.Windows.Media.Color[] szinek;
-    private static string[] zenek = {"1812", "Ballad Of The Mer", "Bosun Bill", "Grogg Mayles", "Maiden Voyage", "Row Row Row Your Boat", "Who Shall not be Returning", "Yo Ho - A Pirate's Life"};
+    private static Color[] szinek;
+    private static string[] zenek = { "1812", "Ballad Of The Mer", "Bosun Bill", "Grogg Mayles", "Maiden Voyage", "Row Row Row Your Boat", "Who Shall not be Returning", "Yo Ho - A Pirate's Life" };
     private static int musicCounter = 0;
 
     public double Hosszusag { get; set; } = 5;
@@ -35,6 +35,11 @@ public partial class MainWindow : Window
 
     Point3D hajoHelye = new(0, 0, 0);
     private MediaPlayer mediaPlayer = new();
+
+    public int Osszesen { get; private set; } = 0;
+    public int Osszeszedve { get; private set; } = 0;
+    public int Osszeg { get; private set; } = 0;
+    public double Szazalek { get; private set; } = 0;
     #endregion
 
     public MainWindow()
@@ -50,62 +55,61 @@ public partial class MainWindow : Window
     {
         szinek =
         [
-            System.Windows.Media.Color.FromRgb(31, 100, 238),
-            System.Windows.Media.Color.FromRgb(17, 73, 186),
-            System.Windows.Media.Color.FromRgb(41, 20, 199),
-            System.Windows.Media.Color.FromRgb(87, 18, 224),
-            System.Windows.Media.Color.FromRgb(109, 34, 201),
-            System.Windows.Media.Color.FromRgb(119, 40, 189),
-            System.Windows.Media.Color.FromRgb(174, 52, 201),
-            System.Windows.Media.Color.FromRgb(217, 52, 159),
-            System.Windows.Media.Color.FromRgb(255, 249, 61),
-            System.Windows.Media.Color.FromRgb(237, 164, 55)
-        ];    }
+            Color.FromRgb(31, 100, 238),
+            Color.FromRgb(17, 73, 186),
+            Color.FromRgb(41, 20, 199),
+            Color.FromRgb(87, 18, 224),
+            Color.FromRgb(109, 34, 201),
+            Color.FromRgb(119, 40, 189),
+            Color.FromRgb(174, 52, 201),
+            Color.FromRgb(217, 52, 159),
+            Color.FromRgb(255, 249, 61),
+            Color.FromRgb(237, 164, 55)
+        ];
+    }
     private void PlayMusic()
     {
         try
         {
-            mediaPlayer.Open(new Uri(Directory.GetCurrentDirectory()+$"/Zenek/{zenek[musicCounter]}.mp3"));
+            mediaPlayer.Open(new Uri(Directory.GetCurrentDirectory() + $"/Zenek/{zenek[musicCounter]}.mp3"));
             mediaPlayer.MediaEnded += delegate {
                 musicCounter++;
                 PlayMusic();
             };
             mediaPlayer.Play();
             lblZene.Content = "Zene: " + zenek[musicCounter];
-        }
-        catch (Exception ex)
+        } catch(Exception ex)
         {
             MessageBox.Show("Hiba történt a zene lejátszása közben: " + ex.Message);
         }
-
     }
-
     private void btnMusicBack_Click(object sender, RoutedEventArgs e)
     {
         musicCounter--;
-        if (musicCounter==-1)
+        if(musicCounter == -1)
         {
             musicCounter = zenek.Length - 1;
         }
         PlayMusic();
-        
-    }
 
+    }
     private void btnMusicNext_Click(object sender, RoutedEventArgs e)
     {
         musicCounter++;
-        if (musicCounter >= zenek.Length)
+        if(musicCounter >= zenek.Length)
         {
             musicCounter = 0;
         }
         PlayMusic();
     }
+
     private void BetoltGyongyok(string path)
     {
         Hosszusag = 0;
         Szelesseg = 0;
         Magassag = 0;
         ter.Children.Clear();
+
         Betolt(path);
 
         int oszto = gyongyok.Max(G => G.Ertek) / szinek.Length + 1;
@@ -302,8 +306,8 @@ public partial class MainWindow : Window
 
         if (openFileDialog.ShowDialog() is true)
         {
-            lblDarab.Content = "Darabszám : 0";
-            lblOsszeg.Content = "Összeg : 0";
+            Osszeszedve = 0;
+            Osszeg = 0;
             lbGyongyok.ItemsSource = new List<Gyongy>();
 
             BetoltGyongyok(openFileDialog.FileName);
@@ -328,7 +332,7 @@ public partial class MainWindow : Window
     }
     private void Inditas_Click(object sender, RoutedEventArgs e)
     {
-        if (ter.Children.Count() < 3)
+        if (ter.Children.Count < 3)
         {
             MessageBox.Show("Töltsön be pályát!");
             return;
@@ -340,9 +344,6 @@ public partial class MainWindow : Window
 
         if(lbGyongyok.Items.Count > 1)
         {
-            foreach (Gyongy gyongy in lbGyongyok.Items)
-                (ter.Children.First(G => G.GetName() == gyongy.Id.ToString()) as EllipsoidVisual3D).Fill = new SolidColorBrush(Colors.Green);
-
             Osszekotes();
             EredmenyKiiras();
         }
@@ -352,8 +353,8 @@ public partial class MainWindow : Window
         foreach (Gyongy gyongy in lbGyongyok.Items)
             sum += gyongy.Ertek;
         
-        lblDarab.Content = $"Darabszám : {lbGyongyok.Items.Count}";
-        lblOsszeg.Content = $"Összeg : {sum}";
+        Osszeszedve = lbGyongyok.Items.Count;
+        Osszeg = sum;
     }
 
     private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -364,8 +365,8 @@ public partial class MainWindow : Window
     }
     private void BtnVeletlenPalya_Click(object sender, RoutedEventArgs e)
     {
-        lblDarab.Content = "Darabszám : 0";
-        lblOsszeg.Content = "Összeg : 0";
+        Osszesen = 0;
+        Osszeg = 0;
         lbGyongyok.ItemsSource = new List<Gyongy>();
 
         Random rand = new();
@@ -382,9 +383,10 @@ public partial class MainWindow : Window
     }
     #endregion
 
+    #region __Animáció__
     private void BtnAnimacio_Click(object sender, RoutedEventArgs e)
     {
-        if (lbGyongyok.Items.Count < 2)
+        if (lbGyongyok.Items.Count == 1)
             return;
 
         List<Point3D> coordinateList = new List<Point3D>()
@@ -463,6 +465,5 @@ public partial class MainWindow : Window
         double distance = vector.Length;
         return distance;
     }
-
-
+    #endregion
 }

@@ -18,9 +18,9 @@ public class Robot
         IEnumerable<Gyongy> szukitett = gyongyok.Skip(1)
                                                 .Where(G => ORIGO.szomszedok[G.Id] * 2 <= UTHOSSZ);
         int[] ertekek = szukitett.DistinctBy(G => G.Ertek)
-                                  .Select(G => G.Ertek)
-                                  .Where(G => G != 0)
-                                  .ToArray();
+                                 .Select(G => G.Ertek)
+                                 .Where(G => G != 0)
+                                 .ToArray();
         IList<Gyongy> optimalis = [];
 
         foreach (int ertek in ertekek)
@@ -30,14 +30,14 @@ public class Robot
                 optimalis = gyongyok;
 
             gyongyok = LegjobbAlgo2(ORIGO, szukitett.Where(G => G.Ertek >= ertek));
-            if (gyongyok.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
+            if(gyongyok.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))
                 optimalis = gyongyok;
         }
 
         return optimalis;
     }
 
-    private static IList<Gyongy> LegjobbAlgo(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt=0)
+    private static IList<Gyongy> LegjobbAlgo(Gyongy kiindulo, IEnumerable<Gyongy> szukitett, double megtettUt = 0)
     {
         Gyongy gyongy = szukitett.MinBy(G => G.Id != kiindulo.Id ? kiindulo.szomszedok[G.Id] : 0);
 
