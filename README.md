@@ -15,6 +15,16 @@ A képernyő középső részén található térben a WASD gombokkal tudunk moz
 A jobb oldalon találhatóak az információk a random pálya generálásához. Beállítható, hogy milyen intervallumon generálja az akvárium méretét mindhárom irányban. Beállítható,
 hogy milyen intervallumban generálja a gyöngyöket, illetve, hogy milyen értékű lehessen maximum egy gyöngy. A generálás gombra kattintva létrejön az új véletlengenerált pálya.
 
+<br>
+<br>
+
+<div align="center">
+  <img src="Névtelen.png" width="600" height="300"/>
+</div>
+
+<br>
+<br>
+
 A gyöngyök beolvasása feliratú gombra kattintva megjelenik egy új ablak. Itt tudjuk kitallózni txt fájlokat és kiválasztani a betöltendő pályát. A nézőpontot tetszőleges pozíciókba
 helyezhetjük. Ehhez meg kell adnunk a kívánt koordinátákat és rá kell kattintani a kamera lerakás feliratú gombra. Az út keresése gombra kattintva meghatározhatun egy útvonalat,
 amelyet a program a beállított sebesség és idő függvényében határoz meg. A futási idő egy ablakban megjelenik ms mértékegységben egy új ablakban, ha előzetesen be van pipálva a
