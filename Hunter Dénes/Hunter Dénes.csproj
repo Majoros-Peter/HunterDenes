@@ -7,6 +7,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+	
+	<!--<PublisherName>GG</PublisherName>
+	<PublishSingleFile>true</PublishSingleFile>
+	<PublishAot>true</PublishAot>
+	<PublishReadyToRun>true</PublishReadyToRun>-->
   </PropertyGroup>
 
   <ItemGroup>

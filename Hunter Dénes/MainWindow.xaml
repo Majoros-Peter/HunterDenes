@@ -119,10 +119,10 @@
                     <Button x:Name="BtnAnimacio" Click="BtnAnimacio_Click" Content="Animáció indítása"/>
 
                     <StackPanel>
-                        <Label Content="{Binding Path=Osszesen}" VerticalContentAlignment="center" ContentStringFormat="Össesen : {0} db"/>
-                        <Label Content="{Binding Path=Osszeszedve}" VerticalContentAlignment="center" ContentStringFormat="Összeszedve : {0} db"/>
-                        <Label Content="{Binding Path=Osszeg}" VerticalContentAlignment="center" ContentStringFormat="Összegyűjtöttek értéke: {0} Zed"/>
-                        <Label Content="{Binding Path=Szazalek}" VerticalContentAlignment="center" ContentStringFormat=" {0}%"/>
+                        <Label x:Name="lblOsszesen" Content="{Binding Path=Osszesen}" VerticalContentAlignment="center" ContentStringFormat="Össesen : {0} db" Padding="2"/>
+                        <Label x:Name="lblOsszeszedve" Content="{Binding Path=Osszeszedve}" VerticalContentAlignment="center" ContentStringFormat="Összeszedve : {0} db" Padding="2"/>
+                        <Label x:Name="lblOsszeg" Content="{Binding Path=Osszeg}" VerticalContentAlignment="center" ContentStringFormat="Összegyűjtöttek értéke: {0} Zed" Padding="2"/>
+                        <Label x:Name="lblSzazalek" Content="{Binding Path=Szazalek}" VerticalContentAlignment="center" ContentStringFormat="Gyöngyök {0:0.##}%-a összegyűjtve" Padding="2"/>
                     </StackPanel>
 
                     <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="300"/>

@@ -36,10 +36,10 @@ public partial class MainWindow : Window
     Point3D hajoHelye = new(0, 0, 0);
     private MediaPlayer mediaPlayer = new();
 
-    public int Osszesen { get; private set; } = 0;
-    public int Osszeszedve { get; private set; } = 0;
-    public int Osszeg { get; private set; } = 0;
-    public double Szazalek { get; private set; } = 0;
+    public int Osszesen { get; set; } = 0;
+    public int Osszeszedve { get; set; } = 0;
+    public int Osszeg { get; set; } = 0;
+    public double Szazalek { get; set; } = 0;
     #endregion
 
     public MainWindow()
@@ -115,6 +115,11 @@ public partial class MainWindow : Window
 
         Betolt(path);
 
+        Osszesen = gyongyok.Length;
+        Osszeszedve = 0;
+        Osszeg = 0;
+        Szazalek = 0;
+
         int oszto = gyongyok.Max(G => G.Ertek) / szinek.Length + 1;
 
         foreach (Gyongy gyongy in gyongyok)
@@ -138,6 +143,11 @@ public partial class MainWindow : Window
     }
     private void BetoltGyongyok()
     {
+        Osszesen = gyongyok.Length;
+        Osszeszedve = 0;
+        Osszeg = 0;
+        Szazalek = 0;
+
         ter.Children.Clear();
 
         Random rand = new();
@@ -183,10 +193,9 @@ public partial class MainWindow : Window
 
         sw.Stop();
         MessageBox.Show($"{sw.ElapsedMilliseconds} milliseconds");
-
     }
 
-    private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) => e.Handled = new Regex(@"[^-0-9.]+").IsMatch(e.Text);
+    private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) => e.Handled = new Regex(@"[^0-9]+").IsMatch(e.Text);
     #endregion
 
     #region __UI Elemek__
@@ -311,6 +320,9 @@ public partial class MainWindow : Window
         {
             Osszeszedve = 0;
             Osszeg = 0;
+            lblOsszeszedve.GetBindingExpression(ContentProperty).UpdateTarget();
+            lblOsszesen.GetBindingExpression(ContentProperty).UpdateTarget();
+
             lbGyongyok.ItemsSource = new List<Gyongy>();
 
             BetoltGyongyok(openFileDialog.FileName);
@@ -350,6 +362,11 @@ public partial class MainWindow : Window
             Osszekotes();
             EredmenyKiiras();
         }
+
+        lblOsszesen.GetBindingExpression(ContentProperty).UpdateTarget();
+        lblOsszeszedve.GetBindingExpression(ContentProperty).UpdateTarget();
+        lblOsszeg.GetBindingExpression(ContentProperty).UpdateTarget();
+        lblSzazalek.GetBindingExpression(ContentProperty).UpdateTarget();
     }
     private void EredmenyKiiras() {
         int sum = 0;
@@ -358,6 +375,7 @@ public partial class MainWindow : Window
         
         Osszeszedve = lbGyongyok.Items.Count;
         Osszeg = sum;
+        Szazalek = Osszeszedve * 1.0 / Osszesen * 100;
     }
 
     private void lbGyongyok_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -370,6 +388,9 @@ public partial class MainWindow : Window
     {
         Osszesen = 0;
         Osszeg = 0;
+        lblOsszesen.GetBindingExpression(ContentProperty).UpdateTarget();
+        lblOsszeg.GetBindingExpression(ContentProperty).UpdateTarget();
+
         lbGyongyok.ItemsSource = new List<Gyongy>();
 
         Random rand = new();
