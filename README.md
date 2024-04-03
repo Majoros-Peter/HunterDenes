@@ -19,7 +19,7 @@ hogy milyen intervallumban generálja a gyöngyöket, illetve, hogy milyen ért�
 <br>
 
 <div align="center">
-  <img src="Névtelen.png" width="600" height="300"/>
+  <img src="Képernyőkép 2024-04-03 164447.png" width="600" height="300"/>
 </div>
 
 <br>
