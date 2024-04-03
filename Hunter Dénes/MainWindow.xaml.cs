@@ -74,6 +74,8 @@ public partial class MainWindow : Window
             mediaPlayer.Open(new Uri(Directory.GetCurrentDirectory() + $"/Zenek/{zenek[musicCounter]}.mp3"));
             mediaPlayer.MediaEnded += delegate {
                 musicCounter++;
+                if(musicCounter >= zenek.Length)
+                    musicCounter = 0;
                 PlayMusic();
             };
             mediaPlayer.Play();
@@ -82,17 +84,18 @@ public partial class MainWindow : Window
         {
             MessageBox.Show("Hiba történt a zene lejátszása közben: " + ex.Message);
         }
+
     }
+
     private void btnMusicBack_Click(object sender, RoutedEventArgs e)
     {
         musicCounter--;
         if(musicCounter == -1)
-        {
             musicCounter = zenek.Length - 1;
-        }
         PlayMusic();
 
     }
+
     private void btnMusicNext_Click(object sender, RoutedEventArgs e)
     {
         musicCounter++;
