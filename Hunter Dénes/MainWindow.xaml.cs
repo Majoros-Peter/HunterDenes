@@ -25,7 +25,9 @@ using static Gyongy;
 public partial class MainWindow : Window
 {
     #region __Változók__
-    private static Color[] szinek;
+    private static System.Windows.Media.Color[] szinek;
+    private static string[] zenek = {"1812", "Ballad Of The Mer", "Bosun Bill", "Grogg Mayles", "Maiden Voyage", "Row Row Row Your Boat", "Who Shall not be Returning", "Yo Ho - A Pirate's Life"};
+    private static int musicCounter = 0;
 
     public double Hosszusag { get; set; } = 5;
     public double Szelesseg { get; set; } = 5;
@@ -39,7 +41,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = this;
-
+        PlayMusic();
         InitSzinek();
     }
 
@@ -48,31 +50,55 @@ public partial class MainWindow : Window
     {
         szinek =
         [
-            Color.FromRgb(31, 100, 238),
-            Color.FromRgb(17, 73, 186),
-            Color.FromRgb(41, 20, 199),
-            Color.FromRgb(87, 18, 224),
-            Color.FromRgb(109, 34, 201),
-            Color.FromRgb(119, 40, 189),
-            Color.FromRgb(174, 52, 201),
-            Color.FromRgb(217, 52, 159),
-            Color.FromRgb(255, 249, 61),
-            Color.FromRgb(237, 164, 55)
-        ];
-    }
-    private void PlayMusic(string filePath)
+            System.Windows.Media.Color.FromRgb(31, 100, 238),
+            System.Windows.Media.Color.FromRgb(17, 73, 186),
+            System.Windows.Media.Color.FromRgb(41, 20, 199),
+            System.Windows.Media.Color.FromRgb(87, 18, 224),
+            System.Windows.Media.Color.FromRgb(109, 34, 201),
+            System.Windows.Media.Color.FromRgb(119, 40, 189),
+            System.Windows.Media.Color.FromRgb(174, 52, 201),
+            System.Windows.Media.Color.FromRgb(217, 52, 159),
+            System.Windows.Media.Color.FromRgb(255, 249, 61),
+            System.Windows.Media.Color.FromRgb(237, 164, 55)
+        ];    }
+    private void PlayMusic()
     {
-        //MediaPlayer mediaPlayer = new MediaPlayer();
-        //"pack://siteoforigin:/Hangok/piano.mp3"
         try
         {
-            mediaPlayer.Open(new Uri(@"C:\\Users\sinka.jozsef\Desktop\Golok - main\Hunter Dénes\Zenek\sad.mp3"));
+            mediaPlayer.Open(new Uri(Directory.GetCurrentDirectory()+$"/Zenek/{zenek[musicCounter]}.mp3"));
+            mediaPlayer.MediaEnded += delegate {
+                musicCounter++;
+                PlayMusic();
+            };
             mediaPlayer.Play();
+            lblZene.Content = "Zene: " + zenek[musicCounter];
         }
         catch (Exception ex)
         {
             MessageBox.Show("Hiba történt a zene lejátszása közben: " + ex.Message);
         }
+
+    }
+
+    private void btnMusicBack_Click(object sender, RoutedEventArgs e)
+    {
+        musicCounter--;
+        if (musicCounter==-1)
+        {
+            musicCounter = zenek.Length - 1;
+        }
+        PlayMusic();
+        
+    }
+
+    private void btnMusicNext_Click(object sender, RoutedEventArgs e)
+    {
+        musicCounter++;
+        if (musicCounter >= zenek.Length)
+        {
+            musicCounter = 0;
+        }
+        PlayMusic();
     }
     private void BetoltGyongyok(string path)
     {
@@ -80,7 +106,6 @@ public partial class MainWindow : Window
         Szelesseg = 0;
         Magassag = 0;
         ter.Children.Clear();
-
         Betolt(path);
 
         int oszto = gyongyok.Max(G => G.Ertek) / szinek.Length + 1;
@@ -438,4 +463,6 @@ public partial class MainWindow : Window
         double distance = vector.Length;
         return distance;
     }
+
+
 }
