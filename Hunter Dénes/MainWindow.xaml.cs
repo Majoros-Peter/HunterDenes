@@ -61,6 +61,20 @@ public partial class MainWindow : Window
             Color.FromRgb(255, 249, 61)
         ];
     }
+    private void PlayMusic(string filePath)
+    {
+        //MediaPlayer mediaPlayer = new MediaPlayer();
+        //"pack://siteoforigin:/Hangok/piano.mp3"
+        try
+        {
+            mediaPlayer.Open(new Uri(@"C:\\Users\sinka.jozsef\Desktop\Golok - main\Hunter Dénes\Zenek\sad.mp3"));
+            mediaPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Hiba történt a zene lejátszása közben: " + ex.Message);
+        }
+    }
     private void BetoltGyongyok(string path)
     {
         Hosszusag = 0;
