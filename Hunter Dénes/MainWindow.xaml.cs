@@ -384,7 +384,7 @@ public partial class MainWindow : Window
 
     private void BtnAnimacio_Click(object sender, RoutedEventArgs e)
     {
-        if (lbGyongyok.Items.Count == 1)
+        if (lbGyongyok.Items.Count < 2)
             return;
 
         List<Point3D> coordinateList = new List<Point3D>()
