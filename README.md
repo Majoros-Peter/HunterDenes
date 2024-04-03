@@ -20,8 +20,11 @@ hogy milyen intervallumban generálja a gyöngyöket, illetve, hogy milyen ért�
 
 <div align="center">
   <img src="ai1.jpg" width="150" height="150"/>
+  <img src="ai7.jpg" width="150" height="150"/>
   <img src="ai2.jpg" width="150" height="150"/>
+  <img src="ai6.jpg" width="150" height="150"/>
   <img src="ai3.jpg" width="150" height="150"/>
+  <img src="ai4.jpg" width="150" height="150"/>
 </div>
 
 <br>
