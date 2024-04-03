@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:Hunter_Dénes"
         mc:Ignorable="d"
         Icon="/submarine.png"
-        Title="Búvárrobot" Height="700" Width="1400">
+        Title="Búvárrobot" Height="700" Width="1400" MinHeight="700" MinWidth="1000">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -158,6 +158,12 @@
                     </StackPanel>
 
                     <Button x:Name="BtnVeletlenPalya" Click="BtnVeletlenPalya_Click" Content="Generálás"/>
+                </StackPanel>
+                    <Label x:Name="lblZene">Zene:</Label>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button Click="btnMusicBack_Click" x:Name="btnMusicBack" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="40px" Height="40px" Content="←"></Button>
+                        <Button Click="btnMusicNext_Click" x:Name="btnMusicNext" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="40px" Height="40px" Content="→"></Button>
+                    </StackPanel>
                 </StackPanel>
             </Border>
             <!--#endregion-->
