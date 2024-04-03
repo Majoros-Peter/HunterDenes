@@ -9,16 +9,16 @@ public struct Gyongy
     public Dictionary<int, double> szomszedok;
 
     public int Id { get; init; } = 0;
-    public byte X { get; init; } = 0;
-    public byte Y { get; init; } = 0;
-    public byte Z { get; init; } = 0;
-    public byte Ertek { get; init; } = 0;
+    public int X { get; init; } = 0;
+    public int Y { get; init; } = 0;
+    public int Z { get; init; } = 0;
+    public int Ertek { get; init; } = 0;
 
     public Gyongy()
     {
         szomszedok = new(fileHossz - 1);
     }
-    public Gyongy(byte[] adatok, int id)
+    public Gyongy(int[] adatok, int id)
     {
         szomszedok = new(fileHossz - 1);
         Id = id;
@@ -43,7 +43,7 @@ public struct Gyongy
             int id = 1;
             while ((sor = sr.ReadLine()) is not null)
             {
-                Gyongy gyongy = new(Array.ConvertAll(sor.TrimEnd(';').Split(';'), Convert.ToByte), id);
+                Gyongy gyongy = new(Array.ConvertAll(sor.TrimEnd(';').Split(';'), Convert.ToInt32), id);
 
                 for (int i = 0; i < id; i++)
                 {
@@ -60,8 +60,9 @@ public struct Gyongy
         }
     }
 
-    public static void Betolt(Func<byte> x, Func<byte> y, Func<byte> z, Func<byte> ertek, int gyongyokSzama)
+    public static void Betolt(Func<int> x, Func<int> y, Func<int> z, Func<int> ertek, int gyongyokSzama)
     {
+        int kimaradt = 0;
         gyongyok = new Gyongy[fileHossz = gyongyokSzama];
         gyongyok[0] = new();
 
@@ -69,22 +70,32 @@ public struct Gyongy
         {
             Gyongy gyongy = new([x(), y(), z(), ertek()], id);
 
-            for(int i = 0; i < id; i++)
-            {
-                if(gyongy.X == gyongyok[i].X && gyongy.Y == gyongyok[i].Y && gyongy.Z == gyongyok[i].Z)
-                {
-                    continue;
-                }
-            }
-
             for (int i = 0; i < id; i++)
             {
-                double tavolsag = Távolság(gyongyok[i], gyongy);
-                gyongyok[i].szomszedok.Add(gyongy.Id, tavolsag);
-                gyongy.szomszedok.Add(gyongyok[i].Id, tavolsag);
-            }
+                if (gyongy.X == gyongyok[i].X && gyongy.Y == gyongyok[i].Y && gyongy.Z == gyongyok[i].Z)
+                {
+                    kimaradt++;
+                    break;
+                }
 
-            gyongyok[id] = gyongy;
+                gyongyok[id-kimaradt] = gyongy;
+            }
+        }
+
+        if(kimaradt != 0)
+        {
+            fileHossz -= kimaradt;
+            Array.Resize(ref gyongyok, fileHossz);
+        }
+
+        for (int id = 1; id < fileHossz; id++)
+        { 
+            for (int i = 0; i < id; i++)
+            {
+                double tavolsag = Távolság(gyongyok[i], gyongyok[id]);
+                gyongyok[i].szomszedok.Add(id, tavolsag);
+                gyongyok[id].szomszedok.Add(gyongyok[i].Id, tavolsag);
+            }
         }
     }
     public static double Távolság(Gyongy a, Gyongy b)

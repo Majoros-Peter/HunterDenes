@@ -17,13 +17,13 @@ public class Robot
     {
         IEnumerable<Gyongy> szukitett = gyongyok.Skip(1)
                                                 .Where(G => ORIGO.szomszedok[G.Id] * 2 <= UTHOSSZ);
-        byte[] ertekek = szukitett.DistinctBy(G => G.Ertek)
+        int[] ertekek = szukitett.DistinctBy(G => G.Ertek)
                                   .Select(G => G.Ertek)
                                   .Where(G => G != 0)
                                   .ToArray();
         IList<Gyongy> optimalis = [ORIGO];
 
-        foreach (byte ertek in ertekek)
+        foreach (int ertek in ertekek)
         {
             IList<Gyongy> gyongyok = LegjobbAlgo(ORIGO, szukitett.Where(G => G.Ertek >= ertek));
             if(gyongyok.Sum(G => G.Ertek) > optimalis.Sum(G => G.Ertek))

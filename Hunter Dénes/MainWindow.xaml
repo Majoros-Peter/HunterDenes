@@ -20,10 +20,10 @@
     </Window.Resources>
 
     <Border BorderBrush="LightGray" BorderThickness="0 1 0 0">
+        <Border.Background>
+            <ImageBrush ImageSource="/ocean.jpg" Opacity=".9"/>
+        </Border.Background>
         <Grid>
-            <Grid.Background>
-                <ImageBrush ImageSource="/ocean.jpg"/>
-            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200px"/>
                 <ColumnDefinition/>
@@ -40,7 +40,7 @@
             <!--#region __Kezelő panel__-->
             <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0 0 1 0" Padding="5">
                 <Border.Background>
-                    <SolidColorBrush Color="#e8f1f2" Opacity="100"/>
+                    <SolidColorBrush Color="#e8f1f2" Opacity=".8"/>
                 </Border.Background>
                 <StackPanel>
                     <Label FontSize="22" HorizontalAlignment="Center" Margin="0 0 0 20" Content="Kezelő panel"/>
@@ -90,7 +90,7 @@
             <!--#region __Random generálás__-->
             <Border Grid.Column="2" BorderBrush="LightGray" BorderThickness="1 0 0 0">
                 <Border.Background>
-                    <SolidColorBrush Color="#e8f1f2" Opacity="1"/>
+                    <SolidColorBrush Color="#e8f1f2" Opacity=".8"/>
                 </Border.Background>
 
                 <StackPanel>

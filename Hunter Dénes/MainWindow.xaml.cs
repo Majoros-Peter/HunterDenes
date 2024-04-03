@@ -50,7 +50,6 @@ public partial class MainWindow : Window
     {
         szinek =
         [
-            Color.FromRgb(0, 0, 0),
             Color.FromRgb(31, 100, 238),
             Color.FromRgb(17, 73, 186),
             Color.FromRgb(41, 20, 199),
@@ -83,7 +82,7 @@ public partial class MainWindow : Window
                 RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
-                Fill = new SolidColorBrush(szinek[gyongy.Ertek])
+                Fill = new SolidColorBrush(szinek[(gyongy.Ertek + 1) / (50 / szinek.Length)])
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
@@ -95,11 +94,11 @@ public partial class MainWindow : Window
         ter.Children.Clear();
 
         Random rand = new();
-        Func<byte> x = () => (byte)rand.Next((int)Hosszusag+1);
-        Func<byte> y = () => (byte)rand.Next((int)Szelesseg+1);
-        Func<byte> z = () => (byte)rand.Next((int)Magassag+1);
+        Func<int> x = () => rand.Next((int)Hosszusag+1);
+        Func<int> y = () => rand.Next((int)Szelesseg+1);
+        Func<int> z = () => rand.Next((int)Magassag+1);
         int gyongyokSzama = rand.Next(Convert.ToInt32(txtGyongyokSzamaMin.Text) + 1, Convert.ToInt32(txtGyongyokSzamaMax.Text) + 1);
-        Func<byte> ertek = () => (byte)(rand.Next((int)slGyongyErtekek.Value)+1);
+        Func<int> ertek = () => rand.Next((int)slGyongyErtekek.Value)+1;
 
         Betolt(x, y, z, ertek, gyongyokSzama);
 
@@ -111,7 +110,7 @@ public partial class MainWindow : Window
                 RadiusY = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 RadiusZ = gyongy.Ertek == 0 ? 0 : Math.Log10(gyongy.Ertek + 1) * 1.2,
                 Center = Pont(gyongy),
-                Fill = new SolidColorBrush(szinek[gyongy.Ertek])
+                Fill = new SolidColorBrush(szinek[(gyongy.Ertek + 1) / (50 / szinek.Length)])
             };
 
             gyongy3d.SetName(gyongy.Id.ToString());
@@ -222,7 +221,7 @@ public partial class MainWindow : Window
     {
         SolidColorBrush viz = new(Colors.LightBlue)
         {
-            Opacity = 0.4
+            Opacity = .6
         };
         BoxVisual3D teglaTest = new()
         {
