@@ -35,6 +35,7 @@ mezőre duplán kattintva az adott gyöngyhöz juthatunk a 3D-s térben. Megjele
 A program C# nyelven íródott. A WPF és a HelixToolkit.WPF keretrendszereket használtuk. Visual Studio 2022 környezetben dolgoztunk.
 <div align="center">
   <img src="https://github.com/devicons/devicon/blob/master/icons/csharp/csharp-line.svg" title="C sharp" alt="C#" width="80" height="80"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/visualstudio/visualstudio-original-wordmark.svg" title="C sharp" alt="C#" width="80" height="80"/>&nbsp;
 </div>
 
 <hr>
