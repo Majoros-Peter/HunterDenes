@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -12,6 +12,41 @@
   <ItemGroup>
     <None Remove="ocean.jpg" />
     <None Remove="submarine.png" />
+    <None Remove="Zenek\1812.mp3" />
+    <None Remove="Zenek\Ballad Of The Mer.mp3" />
+    <None Remove="Zenek\Bosun Bill.mp3" />
+    <None Remove="Zenek\Grogg Mayles.mp3" />
+    <None Remove="Zenek\Maiden Voyage.mp3" />
+    <None Remove="Zenek\Row Row Row Your Boat.mp3" />
+    <None Remove="Zenek\Who Shall not be Returning.mp3" />
+    <None Remove="Zenek\Yo Ho - A Pirate%27s Life.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Zenek\1812.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Ballad Of The Mer.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Bosun Bill.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Grogg Mayles.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Maiden Voyage.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Row Row Row Your Boat.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Who Shall not be Returning.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Zenek\Yo Ho - A Pirate's Life.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
