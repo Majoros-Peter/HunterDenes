@@ -125,7 +125,7 @@
                         <Label x:Name="lblSzazalek" Content="{Binding Path=Szazalek}" VerticalContentAlignment="center" ContentStringFormat="Gyöngyök {0:0.##}%-a összegyűjtve" Padding="2"/>
                     </StackPanel>
 
-                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="300"/>
+                    <ListBox x:Name="lbGyongyok" MouseDoubleClick="lbGyongyok_MouseDoubleClick" MinHeight="5px" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="200"/>
                 </StackPanel>
             </Border>
             <!--#endregion-->
